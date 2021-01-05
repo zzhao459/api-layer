@@ -170,5 +170,7 @@ _BPX_JOBNAME=${ZOWE_PREFIX}${CACHING_CODE} java -Xms16m -Xmx512m -Xquickstart \
   -Dserver.ssl.trustStoreType=${KEYSTORE_TYPE} \
   -Dserver.ssl.trustStorePassword=${KEYSTORE_PASSWORD} \
   -Djava.protocol.handler.pkgs=com.ibm.crypto.provider \
+  -Dcaching.storage.mode=vsam \
+  -Dcaching.storage.vsam.name="//'JANDA06.CACHE5'" \
   -jar ${ROOT_DIR}"/components/api-mediation/caching-service.jar" &
 echo "Done"
