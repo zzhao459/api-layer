@@ -175,6 +175,7 @@ _BPX_JOBNAME=${ZOWE_PREFIX}${CACHING_CODE} java -javaagent:${ROOT_DIR}/component
   -Delastic.apm.service_name=CACHING-SERVICE \
   -Delastic.apm.server_urls=http://mundev001682.bpc.broadcom.net:8200 \
   -Delastic.apm.application_packages=org.zowe \
+  -Delastic.apm.trace_methods=org.zowe.* \
   -jar ${ROOT_DIR}"/components/api-mediation/caching-service.jar" &
 echo "Done"
 
