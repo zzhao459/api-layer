@@ -24,7 +24,7 @@ execution:
 
 scenarios:
   sdk-jwt:
-    script: caching-create.jmx
+    script: modified_caching-create.jmx
     variables:
       host: usilca32.lvn.broadcom.net
       port: 7994
