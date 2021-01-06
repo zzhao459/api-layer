@@ -29,6 +29,10 @@
             "caching-service/build/libs/caching-service.jar": {
                 "target": "components/api-mediation/caching-service.jar",
                 "binary": true
+            },
+            "config/zowe-api-dev/elastic-apm-agent-1.19.0.jar": {
+                "target": "components/api-mediation/elastic-apm-agent.jar",
+                "binary": true
             }
         }
     },

@@ -147,7 +147,7 @@ _BPX_JOBNAME=${ZOWE_PREFIX}${DISCOVERABLECLIENT_CODE} java -Xms32m -Xmx256m -Xqu
     -Dapiml.service.preferIpAddress=false \
     -jar ${ROOT_DIR}"/components/api-mediation/discoverable-client.jar" &
 echo "starting CS"
-_BPX_JOBNAME=${ZOWE_PREFIX}${CACHING_CODE} java -Xms16m -Xmx512m -Xquickstart \
+_BPX_JOBNAME=${ZOWE_PREFIX}${CACHING_CODE} java -javaagent:${ROOT_DIR}/components/api-mediation/elastic-apm-agent.jar -Xms16m -Xmx512m -Xquickstart \
   -Dibm.serversocket.recover=true \
   -Dfile.encoding=UTF-8 \
   -Djava.io.tmpdir=/tmp \
@@ -172,5 +172,10 @@ _BPX_JOBNAME=${ZOWE_PREFIX}${CACHING_CODE} java -Xms16m -Xmx512m -Xquickstart \
   -Djava.protocol.handler.pkgs=com.ibm.crypto.provider \
   -Dcaching.storage.mode=vsam \
   -Dcaching.storage.vsam.name="//'JANDA06.CACHE5'" \
+  -Delastic.apm.service_name=CACHING-SERVICE \
+  -Delastic.apm.server_urls=http://mundev001682.bpc.broadcom.net:8200 \
+  -Delastic.apm.application_packages=org.zowe \
   -jar ${ROOT_DIR}"/components/api-mediation/caching-service.jar" &
 echo "Done"
+
+
