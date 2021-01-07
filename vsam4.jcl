@@ -13,7 +13,7 @@
       VOLUME(MVR24A) -
       REC(80 20) -
       INDEXED -
-      SHAREOPTIONS(4 4)) -
+      SHAREOPTIONS(2 4)) -
     DATA -
       (NAME(JANDA06.CACHE5.DATA) -
       RECSZ(80 512) -
