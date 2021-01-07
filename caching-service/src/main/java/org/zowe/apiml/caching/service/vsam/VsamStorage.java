@@ -47,7 +47,7 @@ public class VsamStorage implements Storage {
     @Override
     @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class})
     public KeyValue create(String serviceId, KeyValue toCreate) {
-        log.debug("Writing record: {}|{}|{}", serviceId, toCreate.getKey(), toCreate.getValue());
+        log.info("Writing record: {}|{}|{}", serviceId, toCreate.getKey(), toCreate.getValue());
         KeyValue result = null;
 
         try (VsamFile file = new VsamFile(vsamConfig, VsamConfig.VsamOptions.WRITE)) {
@@ -66,7 +66,7 @@ public class VsamStorage implements Storage {
 
     @Override
     public KeyValue read(String serviceId, String key) {
-        log.debug("Reading Record: {}|{}|{}", serviceId, key, "-");
+        log.info("Reading Record: {}|{}|{}", serviceId, key, "-");
         KeyValue result = null;
 
         try (VsamFile file = new VsamFile(vsamConfig, VsamConfig.VsamOptions.READ)) {
@@ -85,7 +85,7 @@ public class VsamStorage implements Storage {
     @Override
     @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class})
     public KeyValue update(String serviceId, KeyValue toUpdate) {
-        log.debug("Updating Record: {}|{}|{}", serviceId, toUpdate.getKey(), toUpdate.getValue());
+        log.info("Updating Record: {}|{}|{}", serviceId, toUpdate.getKey(), toUpdate.getValue());
         KeyValue result = null;
 
         try (VsamFile file = new VsamFile(vsamConfig, VsamConfig.VsamOptions.WRITE)) {
@@ -105,7 +105,7 @@ public class VsamStorage implements Storage {
     @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class})
     public KeyValue delete(String serviceId, String toDelete) {
 
-        log.debug("Deleting Record: {}|{}|{}", serviceId, toDelete, "-");
+        log.info("Deleting Record: {}|{}|{}", serviceId, toDelete, "-");
         KeyValue result = null;
 
         try (VsamFile file = new VsamFile(vsamConfig, VsamConfig.VsamOptions.WRITE)) {
@@ -124,7 +124,7 @@ public class VsamStorage implements Storage {
     @Override
     public Map<String, KeyValue> readForService(String serviceId) {
 
-        log.debug("Reading All Records: {}|{}|{}", serviceId, "-", "-");
+        log.info("Reading All Records: {}|{}|{}", serviceId, "-", "-");
         Map<String, KeyValue> result = new HashMap<>();
         List<VsamRecord> returned = new ArrayList<>();
 
