@@ -18,10 +18,6 @@
                 "target": "components/api-mediation/api-catalog-services-lite.jar",
                 "binary": true
             },
-            "build/libs/api-layer-lite-lib-all.jar": {
-                "target": "components/api-mediation/lib/api-layer-lite-lib-all.jar",
-                "binary": true
-            },
             "discoverable-client/build/libs/discoverable-client.jar": {
                 "target": "components/api-mediation/discoverable-client.jar",
                 "binary": true
@@ -32,6 +28,10 @@
             },
             "config/zowe-api-dev/elastic-apm-agent-1.19.0.jar": {
                 "target": "components/api-mediation/elastic-apm-agent.jar",
+                "binary": true
+            },
+            "build/libs/api-layer-lite-lib-all.jar": {
+                "target": "components/api-mediation/lib/api-layer-lite-lib-all.jar",
                 "binary": true
             }
         }
