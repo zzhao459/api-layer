@@ -85,7 +85,7 @@ public class VsamStorage implements Storage {
 
     @Override
     @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class}
-    ,backoff = @Backoff(value = 500))
+    ,backoff = @Backoff(value = 1500))
     public KeyValue update(String serviceId, KeyValue toUpdate) {
         log.info("Updating Record: {}|{}|{}", serviceId, toUpdate.getKey(), toUpdate.getValue());
         KeyValue result = null;
