@@ -10,6 +10,7 @@
 package org.zowe.apiml.caching.service.vsam;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.zowe.apiml.caching.config.VsamConfig;
 import org.zowe.apiml.caching.model.KeyValue;
@@ -83,7 +84,8 @@ public class VsamStorage implements Storage {
     }
 
     @Override
-    @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class})
+    @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class}
+    ,backoff = @Backoff(delay= 500))
     public KeyValue update(String serviceId, KeyValue toUpdate) {
         log.info("Updating Record: {}|{}|{}", serviceId, toUpdate.getKey(), toUpdate.getValue());
         KeyValue result = null;
