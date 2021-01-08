@@ -216,9 +216,9 @@
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">100</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">50</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">120</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">60</stringProp>
+        <stringProp name="ThreadGroup.duration">120</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
@@ -348,9 +348,9 @@
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">100</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">50</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">120</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">60</stringProp>
+        <stringProp name="ThreadGroup.duration">120</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
