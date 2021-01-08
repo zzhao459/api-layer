@@ -5,14 +5,15 @@
 #
 # +++++++++++++++++++++++++++++++++++++++++++++++++++
 
+modules:
+  jmeter:
+    gui: false
 
 settings:
   artifacts-dir: test-results/%Y-%m-%d_%H-%M-%S.%f
 
 execution:
-- concurrency: 8
-  hold-for: 1m
-  scenario: sdk-jwt
+  scenario: profiling
 
 # reporting:
 # - module: final-stats
@@ -23,13 +24,13 @@ execution:
 #   test-duration: true  # provides test duration
 
 scenarios:
-  sdk-jwt:
-    script: modified_caching-create.jmx
+  profiling:
+    script: david-caching-profiling.jmx
     variables:
-      host: usilca32.lvn.broadcom.net
-      port: 7994
-      USERNAME:
-      PASSWORD:
+      host: localhost
+      port: 10010
+      USERNAME: janda06
+      PASSWORD: Heslo234
 
 # bzt 2020-sdk-jwt.yml -o settings.artifacts-dir=test-results/prodzowe-sdk-jwt
 # bzt 2020-myapiml-sdk-jwt.yml -o settings.artifacts-dir=test-results/myzowe-sdk-jwt-20concurrent
