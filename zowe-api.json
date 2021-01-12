@@ -48,7 +48,7 @@
                     "target": "run-wrapper.sh",
                     "binary": false
                 },
-                "config/zowe-api-dev/alternative_start.sh": {
+                "config/zowe-api-dev/alternative_start_dual_caching.sh": {
                     "target": "start.sh",
                     "binary": false
                 },
