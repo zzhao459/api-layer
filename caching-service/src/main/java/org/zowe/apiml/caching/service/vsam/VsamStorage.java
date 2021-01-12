@@ -26,27 +26,22 @@ import java.util.*;
 @Slf4j
 public class VsamStorage implements Storage {
 
-    VsamConfig vsamConfig;
+    private final VsamConfig vsamConfig;
 
-    public VsamStorage(VsamConfig config) {
+    public VsamStorage(VsamConfig vsamConfig, VsamInitializer vsamInitializer) {
 
         log.info("Using VSAM storage for the cached data");
 
-        ObjectUtil.requireNotNull(config.getFileName(), "Vsam filename cannot be null"); //TODO bean validation
-        ObjectUtil.requireNotEmpty(config.getFileName(), "Vsam filename cannot be empty");
-
-        this.vsamConfig = config;
-
+        ObjectUtil.requireNotNull(vsamConfig.getFileName(), "Vsam filename cannot be null"); //TODO bean validation
+        ObjectUtil.requireNotEmpty(vsamConfig.getFileName(), "Vsam filename cannot be empty");
+        this.vsamConfig = vsamConfig;
         log.info("Using Vsam configuration: {}", vsamConfig);
-
-        try (VsamFile file = new VsamFile(config, VsamConfig.VsamOptions.WRITE, true)) {
-            log.info("Vsam file open successful");
-        }
-
+        vsamInitializer.storageWarmup(vsamConfig);
     }
 
+
     @Override
-    @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class})
+    @Retryable(value = {IllegalStateException.class, UnsupportedOperationException.class})
     public KeyValue create(String serviceId, KeyValue toCreate) {
         log.info("Writing record: {}|{}|{}", serviceId, toCreate.getKey(), toCreate.getValue());
         KeyValue result = null;
@@ -84,8 +79,8 @@ public class VsamStorage implements Storage {
     }
 
     @Override
-    @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class}
-    ,backoff = @Backoff(value = 1000))
+    @Retryable(value = {IllegalStateException.class, UnsupportedOperationException.class}
+        , backoff = @Backoff(value = 1000))
     public KeyValue update(String serviceId, KeyValue toUpdate) {
         log.info("Updating Record: {}|{}|{}", serviceId, toUpdate.getKey(), toUpdate.getValue());
         KeyValue result = null;
@@ -104,7 +99,7 @@ public class VsamStorage implements Storage {
     }
 
     @Override
-    @Retryable (value = {IllegalStateException.class, UnsupportedOperationException.class})
+    @Retryable(value = {IllegalStateException.class, UnsupportedOperationException.class})
     public KeyValue delete(String serviceId, String toDelete) {
 
         log.info("Deleting Record: {}|{}|{}", serviceId, toDelete, "-");

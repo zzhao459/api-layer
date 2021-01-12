@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zowe.apiml.caching.service.Storage;
 import org.zowe.apiml.caching.service.inmemory.InMemoryStorage;
+import org.zowe.apiml.caching.service.vsam.VsamInitializer;
 import org.zowe.apiml.caching.service.vsam.VsamStorage;
 
 @Configuration
@@ -23,11 +24,12 @@ import org.zowe.apiml.caching.service.vsam.VsamStorage;
 public class StorageConfiguration {
 
     private final VsamConfig vsamConfig;
+    private final VsamInitializer vsamInitializer;
 
     @ConditionalOnProperty(name = "caching.storage.mode", havingValue = "vsam")
     @Bean
     public Storage vsam() {
-        return new VsamStorage(vsamConfig);
+        return new VsamStorage(vsamConfig, vsamInitializer);
     }
 
     @ConditionalOnMissingBean(Storage.class)
