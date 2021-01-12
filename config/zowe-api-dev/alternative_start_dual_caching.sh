@@ -177,7 +177,6 @@ _BPX_JOBNAME=${ZOWE_PREFIX}C1 java -javaagent:${ROOT_DIR}/components/api-mediati
   -Delastic.apm.application_packages=org.zowe \
   -Delastic.apm.trace_methods=org.zowe.* \
   -jar ${ROOT_DIR}"/components/api-mediation/caching-service.jar" &
-sleep 10
 echo "starting CS2"
 _BPX_JOBNAME=${ZOWE_PREFIX}C2 java -javaagent:${ROOT_DIR}/components/api-mediation/elastic-apm-agent.jar -Xms16m -Xmx512m -Xquickstart \
   -Dibm.serversocket.recover=true \

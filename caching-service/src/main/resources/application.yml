@@ -1,3 +1,12 @@
+logging:
+    level:
+        ROOT: INFO
+        org:
+            springframework:
+                retry:
+                    support:
+                        RetryTemplate: DEBUG
+
 spring:
     application:
         name: Caching service

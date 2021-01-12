@@ -8,15 +8,6 @@
 # Copyright Contributors to the Zowe Project.
 #
 
-#./gradlew build
-./gradlew caching-service::build
-# zowe-api-dev stop
 zowe jobs cancel job $(zowe jobs list js | grep JZOWEXXX.*ACTIVE | sed -n -e 's/ JZOWEXXX.*$//p')
-
-zowe-api-dev config --name zos
-zowe-api-dev deploy
-
 zowe-api-dev start --job
 
-#zowe zos-uss issue ssh "chmod +x start.sh" --cwd "~/../../z/masserv/janda06/zoweapidev/"
-#zowe zos-uss issue ssh "./start.sh" --cwd "~/../../z/masserv/janda06/zoweapidev/"
