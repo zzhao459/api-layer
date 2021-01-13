@@ -1,8 +1,6 @@
 ## jmeter cli mode
 
-jmeter -Jusername=USER -Jpassword=validPassword -n -t andrej-caching-profiling.jmx -l output/result3 -e -o output/test-results3 -j output/result3.log 
-
-jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=10 -Jrampup=120 -Jhold=120 -Jjmeter.reportgenerator.overall_granularity=1000 -n -t david-caching-profiling.jmx -l output/result -e -o output/test-results -j output/result.log
+jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=10 -Jdataset=mock_csv_small.csv -Jjmeter.reportgenerator.overall_granularity=1000 -n -t caching-profiling-parametrized.jmx -l output/result -e -o output/test-results -j output/result.log
 
 ## jmeter using taurus
 
@@ -20,16 +18,16 @@ bzt taurus/taurus_config.yml
 
 #### Thread levels: 
 
-Low load: 3 threads
+Low load: 5 threads / 1000 records
 
-jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=3 -Jrampup=120 -Jhold=120 -Jjmeter.reportgenerator.overall_granularity=1000 -n -t david-caching-profiling.jmx -l output/result -e -o output/test-results -j output/result.log
+jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=5 -Jdataset=mock_csv.csv -Jjmeter.reportgenerator.overall_granularity=1000 -n -t caching-profiling-parametrized.jmx -l output-l/result -e -o output-l/test-results -j output-l/result.log
 
 Medium load: 15 threads
 
-jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=15 -Jrampup=120 -Jhold=120 -Jjmeter.reportgenerator.overall_granularity=1000 -n -t david-caching-profiling.jmx -l output/result -e -o output/test-results -j output/result.log
+jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=15 -Jdataset=mock_csv.csv -Jjmeter.reportgenerator.overall_granularity=1000 -n -t caching-profiling-parametrized.jmx -l output-m/result -e -o output-m/test-results -j output-m/result.log
 
 High load: 50 threads
 
-jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=50 -Jrampup=120 -Jhold=120 -Jjmeter.reportgenerator.overall_granularity=1000 -n -t david-caching-profiling.jmx -l output/result -e -o output/test-results -j output/result.log
+jmeter -Jusername=USER -Jpassword=validPassword -Jhost=localhost -Jport=10010 -Jthreads=50 -Jdataset=mock_csv.csv -Jjmeter.reportgenerator.overall_granularity=1000 -n -t caching-profiling-parametrized.jmx -l output-h/result -e -o output-h/test-results -j output-h/result.log
 
 
