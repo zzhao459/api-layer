@@ -53,12 +53,14 @@ class ZosmfLoginBreakTest {
         port = config.getGatewayServiceConfiguration().getPort();
     }
 
+    // preemptive auth added because of authentication endpoint changed behavior in RSU2012
+
     @Test
     void breaksZosmf() {
 
         System.out.println("+++ login with Basic and get basicJWT +++");
         String basicJWT =
-            given().auth().basic(username, password).log().all()
+            given().auth().preemptive().basic(username, password).log().all()
             .header("X-CSRF-ZOSMF-HEADER", "")
             .when()
                 .post(String.format("%s://%s:%d%s", zosmfScheme, zosmfHost, zosmfPort, zosmfAuthEndpoint))
@@ -92,7 +94,7 @@ class ZosmfLoginBreakTest {
 
         System.out.println("+++ login same user with PassTicket +++");
         String passticketJWT =
-            given().auth().basic(username, ticketResponse.getTicket()).log().all()
+            given().auth().preemptive().basic(username, ticketResponse.getTicket()).log().all()
                 .header("X-CSRF-ZOSMF-HEADER", "zosmf")
                 .when().post(String.format("%s://%s:%d%s", zosmfScheme, zosmfHost, zosmfPort, zosmfAuthEndpoint))
                 .then().log().all()
@@ -125,7 +127,7 @@ class ZosmfLoginBreakTest {
 
         System.out.println("+++ login with Basic and get basicJWT2 +++");
         String basicJWT2 =
-            given().auth().basic(username, password).log().all()
+            given().auth().preemptive().basic(username, password).log().all()
                 .header("X-CSRF-ZOSMF-HEADER", "")
                 .when()
                 .post(String.format("%s://%s:%d%s", zosmfScheme, zosmfHost, zosmfPort, zosmfAuthEndpoint))
