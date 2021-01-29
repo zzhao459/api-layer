@@ -125,7 +125,17 @@ class ZosmfLoginBreakTest {
             .then().log().all()
             .statusCode(204);
 
+        System.out.println("+++ call zOSMF with passticketJWT +++");
+        System.out.println("verify that logout on basicJWT does not affect passticketJWT");
+        given().log().all()
+            .cookie("jwtToken", passticketJWT)
+            .header("X-CSRF-ZOSMF-HEADER", "")
+            .when().get(String.format("%s://%s:%d%s", zosmfScheme, zosmfHost, zosmfPort, zosmfProtectedEndpoint))
+            .then().log().all()
+            .statusCode(200);
+
         System.out.println("+++ login with Basic and get basicJWT2 +++");
+        System.out.println("if this is broken, it's the same token as the original JWT");
         String basicJWT2 =
             given().auth().preemptive().basic(username, password).log().all()
                 .header("X-CSRF-ZOSMF-HEADER", "")

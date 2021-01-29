@@ -49,7 +49,7 @@ class CheckEnvironment {
     void unblockLockedITUser() {
         // login with Basic and get LTPA
         String ltpa2 =
-            given().auth().basic(username, password)
+            given().auth().preemptive().basic(username, password)
                 .header("X-CSRF-ZOSMF-HEADER", "")
                 .when()
                 .post(String.format("%s://%s:%d%s", zosmfScheme, zosmfHost, zosmfPort, zosmfAuthEndpoint))
@@ -71,7 +71,7 @@ class CheckEnvironment {
 
         // login with Basic and get JWT
         String basicJWT =
-            given().auth().basic(username, password)
+            given().auth().preemptive().basic(username, password)
                 .header("X-CSRF-ZOSMF-HEADER", "")
                 .when()
                 //.post("https://usilca32.lvn.broadcom.net:1443/zosmf/services/authenticate")
