@@ -36,14 +36,17 @@ public class SafResourceAccessConfig {
     private boolean endpointEnabled;
 
     protected SafResourceAccessVerifying createEndpoint(RestTemplate restTemplate) {
+        log.debug("SAF resource access creating ENDPOINT provider");
         return new SafResourceAccessEndpoint(restTemplate);
     }
 
     protected SafResourceAccessVerifying createNative() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, NoSuchFieldException {
+        log.debug("SAF resource access creating NATIVE provider");
         return new SafResourceAccessSaf();
     }
 
     protected SafResourceAccessVerifying createDummy() throws IOException {
+        log.debug("SAF resource access creating DUMMY provider");
         return new SafResourceAccessDummy();
     }
 
@@ -78,10 +81,14 @@ public class SafResourceAccessConfig {
 
     @Bean
     public SafResourceAccessVerifying safResourceAccessVerifying(RestTemplate restTemplate) {
+        log.debug("SAF resource access configuration: endpointEnabled: {}, provider: {}", endpointEnabled, provider);
+
         if (!StringUtils.isEmpty(provider)) {
+            log.debug("SAF resource access configuration override active: forcing provider: {}", provider);
             return create(restTemplate, provider, true);
         }
 
+        log.debug("SAF resource access configuration selecting provider");
         for (String type : PROVIDERS) {
             SafResourceAccessVerifying srv = create(restTemplate, type, false);
             if (srv != null) return srv;

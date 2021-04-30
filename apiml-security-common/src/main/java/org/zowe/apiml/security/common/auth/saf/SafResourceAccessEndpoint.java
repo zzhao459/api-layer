@@ -9,10 +9,8 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -23,6 +21,7 @@ import org.zowe.apiml.security.common.token.TokenAuthentication;
 
 import java.util.Collections;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SafResourceAccessEndpoint implements SafResourceAccessVerifying {
 
@@ -52,6 +51,8 @@ public class SafResourceAccessEndpoint implements SafResourceAccessVerifying {
 
         try {
             HttpEntity<HttpHeaders> httpEntity = createHttpEntity(authentication);
+            log.debug("Calling SAF authorization endpoint with entity: {}", httpEntity);
+            log.debug("Calling SAF authorization endpoint: {}, with resource name: {}, access level: {}", endpointUrl + URL_VARIABLE_SUFFIX, resourceName, accessLevel);
             ResponseEntity<Response> responseEntity = restTemplate.exchange(
                     endpointUrl + URL_VARIABLE_SUFFIX, HttpMethod.GET, httpEntity, Response.class, resourceName, accessLevel
             );
@@ -61,8 +62,10 @@ public class SafResourceAccessEndpoint implements SafResourceAccessVerifying {
             }
             return response != null && !response.isError() && response.isAuthorized();
         } catch (EndpointImproprietyConfigureException e) {
+            log.debug("Endpoint " + endpointUrl + " threw exception: ", endpointUrl, e);
             throw e;
         } catch (Exception e) {
+            log.debug("Endpoint " + endpointUrl + " is not properly configured.", endpointUrl, e);
             throw new EndpointImproprietyConfigureException("Endpoint " + endpointUrl + " is not properly configured.", endpointUrl, e);
         }
     }

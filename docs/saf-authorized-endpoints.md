@@ -7,7 +7,7 @@ Any endpoint can have limited access by checking SAF resource of logged user. Th
 Verification of SAF resource can be provided via three providers:
 - _the highest priority_: REST endpoint call (ZSS or similar one)
 - native
-- _the lowest priority_: dummy implementation (defined in a file
+- _the lowest priority_: dummy implementation (defined in a file)
 
 **note**: The first available based on priority will be used.
 
