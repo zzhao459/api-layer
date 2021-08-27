@@ -168,9 +168,6 @@ task runAllIntegrationTestsNormal(type: Test) {
     systemProperties System.properties
     systemProperty "environment.offPlatform", true
     useJUnitPlatform {
-        includeTags(
-            'WebsocketTest'
-        )
         excludeTags(
             'StartupCheck',
             'EnvironmentCheck',
