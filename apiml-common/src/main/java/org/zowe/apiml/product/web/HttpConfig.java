@@ -62,9 +62,6 @@ public class HttpConfig {
     @Value("${server.ssl.keyStoreType:PKCS12}")
     private String keyStoreType;
 
-    @Value("${server.ssl.ciphers:.*}")
-    private String[] ciphers;
-
     @Value("${apiml.security.ssl.verifySslCertificatesOfServices:true}")
     private boolean verifySslCertificatesOfServices;
 
@@ -176,8 +173,7 @@ public class HttpConfig {
     public SslContextFactory.Client jettyClientSslContextFactory() {
         SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
         sslContextFactory.setProtocol(protocol);
-        sslContextFactory.setExcludeCipherSuites("^.*_(MD5|SHA|SHA1)$");
-        sslContextFactory.setIncludeCipherSuites(ciphers);
+        sslContextFactory.setExcludeCipherSuites("^.*_(MD5|SHA|SHA1)$|TLS_RSA_WITH_AES_256_CBC_SHA256|TLS_RSA_WITH_AES_128_CBC_SHA256|TLS_RSA_WITH_AES_256_GCM_SHA384|TLS_RSA_WITH_AES_128_GCM_SHA256");
         setTruststore(sslContextFactory);
         log.debug("jettySslContextFactory: {}", sslContextFactory.dump());
         sslContextFactory.setHostnameVerifier(secureHostnameVerifier());
