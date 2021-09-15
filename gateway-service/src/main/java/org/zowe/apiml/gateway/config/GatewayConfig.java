@@ -54,12 +54,12 @@ public class GatewayConfig {
         return new TransformService(gatewayClient);
     }
 
-    @Bean
-    @Autowired
-    public SimpleHostRoutingFilter simpleHostRoutingFilter2(ProxyRequestHelper helper, ZuulProperties zuulProperties,
-                                                            @Qualifier("secureHttpClientWithoutKeystore") CloseableHttpClient secureHttpClientWithoutKeystore) {
-        return new SimpleHostRoutingFilter(helper, zuulProperties, secureHttpClientWithoutKeystore);
-    }
+//    @Bean
+//    @Autowired
+//    public SimpleHostRoutingFilter simpleHostRoutingFilter2(ProxyRequestHelper helper, ZuulProperties zuulProperties,
+//                                                            @Qualifier("secureHttpClientWithoutKeystore") CloseableHttpClient secureHttpClientWithoutKeystore) {
+//        return new SimpleHostRoutingFilter(helper, zuulProperties, secureHttpClientWithoutKeystore);
+//    }
 
     @Bean
     public EurekaInstanceConfigBean eurekaInstanceConfigBean(InetUtils inetUtils,

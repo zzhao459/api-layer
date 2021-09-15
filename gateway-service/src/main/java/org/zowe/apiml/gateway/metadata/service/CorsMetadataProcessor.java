@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 @Order(15)
 public class CorsMetadataProcessor extends MetadataProcessor {

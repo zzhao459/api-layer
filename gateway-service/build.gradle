@@ -54,6 +54,7 @@ configurations.all {
 }
 
 dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
     implementation(project(':apiml-security-common'))
     implementation libraries.spring_boot_starter_webflux
     implementation libraries.spring_cloud_starter_zuul
