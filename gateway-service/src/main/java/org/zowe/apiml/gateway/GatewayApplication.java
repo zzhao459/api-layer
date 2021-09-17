@@ -29,7 +29,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import javax.annotation.Nonnull;
 
-//@EnableZuulProxy
+@EnableZuulProxy
 @EnableWebSecurity
 @SpringBootApplication(exclude = HystrixAutoConfiguration.class)
 @ComponentScan(

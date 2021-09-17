@@ -25,7 +25,7 @@ import java.util.*;
  * Externalized configuration of CORS behavior
  */
 @ConditionalOnProperty(name = "apiml.security.filterChainConfiguration", havingValue = "new", matchIfMissing = false)
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 public class CorsBeans {
 

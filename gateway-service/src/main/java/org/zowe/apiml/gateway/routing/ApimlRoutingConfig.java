@@ -45,14 +45,14 @@ public class ApimlRoutingConfig {
         return new ApimlRouteLocator("", discovery, zuulProperties, serviceRouteMapper, routedServicesUsers);
     }
 
-//    @Bean
-//    @ConditionalOnProperty(name = "apiml.routing.mode", havingValue = "new")
-//    @Autowired
-//    public DiscoveryClientRouteLocator apimlClientRouteLocator(DiscoveryClient discoveryClient,
-//                                                ZuulProperties zuulProperties,
-//                                                RoutedServicesNotifier routedServicesNotifier) {
-//        return new NewApimlRouteLocator("", zuulProperties, discoveryClient, routedServicesNotifier);
-//    }
+    @Bean
+    @ConditionalOnProperty(name = "apiml.routing.mode", havingValue = "new")
+    @Autowired
+    public DiscoveryClientRouteLocator apimlClientRouteLocator(DiscoveryClient discoveryClient,
+                                                ZuulProperties zuulProperties,
+                                                RoutedServicesNotifier routedServicesNotifier) {
+        return new NewApimlRouteLocator("", zuulProperties, discoveryClient, routedServicesNotifier);
+    }
 
     @Bean
     @ConditionalOnProperty(name = "apiml.routing.mode", havingValue = "new")
