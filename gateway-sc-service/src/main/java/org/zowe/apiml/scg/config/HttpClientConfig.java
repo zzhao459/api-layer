@@ -46,8 +46,6 @@ public class HttpClientConfig {
                 return httpClient.secure(spec -> {
 
                     try {
-
-
                         KeyStore keyStore = KeyStore.getInstance("PKCS12");
                         keyStore.load(new FileInputStream(ResourceUtils.getFile(HttpClientConfig.this.keyStore)), keyStorePassword.toCharArray());
 
@@ -63,7 +61,7 @@ public class HttpClientConfig {
                         trustManagerFactory.init(trustStore);
 
                         spec.sslContext(SslContextBuilder.forClient()
-                            .keyManager(keyManagerFactory)
+                            //.keyManager(keyManagerFactory) // Disable constant appending of client cert
                             .trustManager(trustManagerFactory)
                             .build());
                     } catch (Exception e) {

@@ -14,3 +14,7 @@ Currently, there is only one HttpClient for all routes, but there is a protected
 
 Hi, I think I have a possible solution. My approximation is to extend NettyRoutingFilter, create a new custom NettyRoutingFilter (extending from the original one) and enabling it. The custom NettyRoutingFilter will override the getHttpclient method and in basis a new metadata on the route decides if it's necessary to use a different SSL configuration.`
 ```
+
+## Understand client certificate and put it to request
+
+https://stackoverflow.com/questions/68865665/spring-cloud-gateway-pass-client-certificate-information
