@@ -9,6 +9,8 @@
  */
 package org.zowe.apiml.gateway.filters.pre;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,6 +27,7 @@ import java.util.Base64;
  * This filter will add X509 certificate from Proxy Gateway
  */
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ProxyGatewayCertificateFilter extends OncePerRequestFilter {
 
     @Override
