@@ -149,13 +149,48 @@ Once to estabilish x509 interop
 
 Once to estabilish trust
 
+## Proxification implementation stages
+
+### 1) Production grade proxy
+- Solve security of communication proxy - gw
+- Solve deployment
+- Solve connectors
+- Solve AT-TLS
+
+Breaking changes
+
+- depending on the connector situation
+
+### 2) Migrate Gateway routing
+- leave other endpoints in GW
+- leave zaas in GW
+- proxy calls to zaas
+
+Breaking changes
+
+- depending on how successfull are we in migrating features to sc gw
+
+(following is optional)
+
+### 3a) Migrate other endpoints to SCGW
+- migrate other endpoints
+- migrate zaas
+
+### 3b) Cleanup GW and make it into ZAAS microservice
+- client certificate already solved from 3)
+- cleans gateway and decouples from zaas startup & config & logic
+
+Breaking changes
+
+- potential path change
+
 # What breaking changes might happen
 
-External vs internal port
+- External vs internal port
 
-Auditing plugin will break
+- Auditing plugin will break
 
-Client with and without certificate switching might be challenging
+- Client with and without certificate switching might be challenging
 
 
 # Benefits
