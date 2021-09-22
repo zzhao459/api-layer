@@ -225,3 +225,17 @@ Hi, I think I have a possible solution. My approximation is to extend NettyRouti
 https://stackoverflow.com/questions/68865665/spring-cloud-gateway-pass-client-certificate-information
 
 this is done in the POC now and interop with Gateway is estabilished.
+
+
+## Request context
+
+The following concepts might be significant: 
+
+    This predicate extracts the URI template variables (such as sub, defined in the preceding example) as a map of names and values and places it in the ServerWebExchange.getAttributes() with a key defined in ServerWebExchangeUtils.URI_TEMPLATE_VARIABLES_ATTRIBUTE. Those values are then available for use by GatewayFilter factories
+
+This is how it's being handled
+```java
+@Override
+public Mono<Void> handle(ServerWebExchange exchange) {
+Route route = exchange.getRequiredAttribute(GATEWAY_ROUTE_ATTR);
+```
