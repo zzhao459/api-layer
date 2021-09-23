@@ -10,12 +10,20 @@
 
 package org.zowe.apiml.scg;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
+import org.springframework.boot.web.embedded.netty.NettyRouteProvider;
+import org.springframework.boot.web.embedded.netty.NettyServerCustomizer;
+import org.springframework.boot.web.reactive.server.ReactiveWebServerFactory;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.reactive.ReactorResourceFactory;
+
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -33,4 +41,17 @@ public class SpringCloudGatewayApplication {
 
             .build();
     }
+
+    @Bean
+    ReactiveWebServerFactory webServerFactory(ReactorResourceFactory resourceFactory,
+                                              ObjectProvider<NettyRouteProvider> routes, ObjectProvider<NettyServerCustomizer> serverCustomizers) {
+        NettyReactiveWebServerFactory serverFactory = new NettyReactiveWebServerFactory();
+        serverFactory.setResourceFactory(resourceFactory);
+
+        routes.orderedStream().forEach(serverFactory::addRouteProviders);
+        serverFactory.getServerCustomizers().addAll(serverCustomizers.orderedStream().collect(Collectors.toList()));
+        return serverFactory;
+    }
+
+
 }

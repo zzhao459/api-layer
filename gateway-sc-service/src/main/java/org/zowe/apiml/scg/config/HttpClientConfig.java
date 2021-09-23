@@ -14,12 +14,22 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
+import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
+import org.springframework.boot.web.server.WebServer;
 import org.springframework.cloud.gateway.config.HttpClientCustomizer;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 import reactor.netty.http.client.HttpClient;
+import reactor.netty.http.server.HttpServer;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
@@ -39,6 +49,9 @@ public class HttpClientConfig {
     private String keyStorePassword;
     private String trustStore;
     private String trustStorePassword;
+
+    @Autowired ReactiveWebServerApplicationContext ctx;
+    @Autowired NettyReactiveWebServerFactory factory;
 
     @Bean
     SslContext secureClientContextWithoutClientCertificate() throws IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
@@ -123,4 +136,26 @@ public class HttpClientConfig {
         };
     }
 
+    @EventListener(ApplicationReadyEvent.class)
+    public void runAfterStartup() {
+        factory.getServerCustomizers().add((HttpServer httpServer)
+            ->  httpServer.port(9092));
+     WebServer webServer = factory.getWebServer(getHttpHandler(ctx));
+     webServer.start();
+    }
+
+    protected HttpHandler getHttpHandler(ReactiveWebServerApplicationContext context) {
+        // Use bean names so that we don't consider the hierarchy
+        String[] beanNames = context.getBeanFactory().getBeanNamesForType(HttpHandler.class);
+        if (beanNames.length == 0) {
+            throw new ApplicationContextException(
+                "Unable to start ReactiveWebApplicationContext due to missing HttpHandler bean.");
+        }
+        if (beanNames.length > 1) {
+            throw new ApplicationContextException(
+                "Unable to start ReactiveWebApplicationContext due to multiple HttpHandler beans : "
+                    + StringUtils.arrayToCommaDelimitedString(beanNames));
+        }
+        return context.getBeanFactory().getBean(beanNames[0], HttpHandler.class);
+    }
 }
