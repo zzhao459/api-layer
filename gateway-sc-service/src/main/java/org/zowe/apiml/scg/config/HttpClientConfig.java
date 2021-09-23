@@ -21,8 +21,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
 import reactor.netty.http.client.HttpClient;
 
-import javax.net.ssl.*;
-import java.io.*;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
 
@@ -85,6 +87,7 @@ public class HttpClientConfig {
     }
 
     //@Bean
+    //TODO global client customizer can be done this way
     HttpClientCustomizer clientCustomizer() {
         return new HttpClientCustomizer() {
             @Override

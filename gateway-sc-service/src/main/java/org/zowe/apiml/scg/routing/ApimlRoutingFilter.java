@@ -11,7 +11,6 @@
 package org.zowe.apiml.scg.routing;
 
 import io.netty.handler.ssl.SslContext;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;

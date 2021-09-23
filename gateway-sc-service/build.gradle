@@ -61,8 +61,10 @@ dependencies {
     annotationProcessor libraries.lombok
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    testCompile libraries.spring_boot_starter_test
+    testCompile libraries.rest_assured
+
 }
 
 dependencyManagement {
@@ -71,6 +73,3 @@ dependencyManagement {
     }
 }
 
-test {
-    useJUnitPlatform()
-}

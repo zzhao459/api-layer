@@ -191,6 +191,7 @@ Breaking changes
 - Auditing plugin will break
 
 - Client with and without certificate switching might be challenging
+    Seems like there is quite easy way to achieve this in the end. It is prototyped in the POC. I have tested it's stability for memory usage and thread counts and it's very stable.
 
 
 # Benefits
@@ -200,6 +201,8 @@ oauth for free
 
 
 <https://dzone.com/articles/secure-spring-cloud-gateway-with-authentication-am>
+
+The pure proxy gateway might not need spring security at all
 
 # POC implementation notes
 
