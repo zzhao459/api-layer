@@ -13,17 +13,12 @@ package org.zowe.apiml.gatewayservice;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.zowe.apiml.security.common.ticket.TicketRequest;
-import org.zowe.apiml.security.common.ticket.TicketResponse;
 import org.zowe.apiml.util.config.ConfigReader;
 import org.zowe.apiml.util.config.EnvironmentConfiguration;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.is;
-import static org.zowe.apiml.gatewayservice.SecurityUtils.gatewayToken;
-import static org.zowe.apiml.gatewayservice.SecurityUtils.getConfiguredSslConfig;
 
 class ZosmfLoginBreakTest {
 
@@ -46,7 +41,7 @@ class ZosmfLoginBreakTest {
         zosmfHost = config.getZosmfServiceConfiguration().getHost();
         zosmfPort = config.getZosmfServiceConfiguration().getPort();
         zosmfAuthEndpoint = "/zosmf/services/authenticate";
-        zosmfProtectedEndpoint = "/zosmf/restfiles/ds?dslevel=sys1.p*";
+        zosmfProtectedEndpoint = "/zosmf/restjobs/jobs";
         zosmfScheme = config.getZosmfServiceConfiguration().getScheme();
         ticketEndpoint = "/api/v1/gateway/auth/ticket";
         host = config.getGatewayServiceConfiguration().getHost();
@@ -57,6 +52,8 @@ class ZosmfLoginBreakTest {
 
     @Test
     void breaksZosmf() {
+
+        RestAssured.useRelaxedHTTPSValidation();
 
         System.out.println("+++ login with Basic and get basicJWT +++");
         String basicJWT =
@@ -77,24 +74,24 @@ class ZosmfLoginBreakTest {
             .then().log().all()
             .statusCode(200);
 
-        System.out.println("+++ generate PASSTICKET +++");
-        RestAssured.config = RestAssured.config().sslConfig(getConfiguredSslConfig());
-        String jwt = gatewayToken();
-        TicketRequest ticketRequest = new TicketRequest("IZUDFLT");
-
-        TicketResponse ticketResponse = given()
-            .contentType(JSON)
-            .body(ticketRequest)
-            .header("Authorization", "Bearer " + jwt)
-            .when()
-            .post(String.format("%s://%s:%d%s", zosmfScheme, host, port, ticketEndpoint))
-            .then()
-            .statusCode(is(SC_OK))
-            .extract().body().as(TicketResponse.class);
+//        System.out.println("+++ generate PASSTICKET +++");
+//        RestAssured.config = RestAssured.config().sslConfig(getConfiguredSslConfig());
+//        String jwt = gatewayToken();
+//        TicketRequest ticketRequest = new TicketRequest("IZUDFLT");
+//
+//        TicketResponse ticketResponse = given()
+//            .contentType(JSON)
+//            .body(ticketRequest)
+//            .header("Authorization", "Bearer " + jwt)
+//            .when()
+//            .post(String.format("%s://%s:%d%s", zosmfScheme, host, port, ticketEndpoint))
+//            .then()
+//            .statusCode(is(SC_OK))
+//            .extract().body().as(TicketResponse.class);
 
         System.out.println("+++ login same user with PassTicket +++");
         String passticketJWT =
-            given().auth().preemptive().basic(username, ticketResponse.getTicket()).log().all()
+            given().auth().preemptive().basic(username, "PASTE_PASSTICKET_HERE").log().all()
                 .header("X-CSRF-ZOSMF-HEADER", "zosmf")
                 .when().post(String.format("%s://%s:%d%s", zosmfScheme, zosmfHost, zosmfPort, zosmfAuthEndpoint))
                 .then().log().all()
