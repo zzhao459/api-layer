@@ -20,6 +20,7 @@ ext.javaProjectsWithUnitTests = [
     'apiml-security-common',
     'zaas-client',
     'certificate-analyser',
+    'certificate-service',
     'apiml-tomcat-common'
 ]
 

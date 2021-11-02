@@ -29,7 +29,8 @@ ext.projectsNeedLicense = [
     'onboarding-enabler-nodejs',
     'zaas-client',
     'mock-zosmf',
-    'apiml-tomcat-common'
+    'apiml-tomcat-common',
+    'certificate-service'
 ]
 
 configure(subprojects.findAll { it.name in projectsNeedLicense }) {
