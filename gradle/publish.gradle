@@ -16,6 +16,7 @@ ext.javaLibraries = [
     'zaas-client',
     'discoverable-client',
     'certificate-analyser',
+    'certificate-service',
     'apiml-tomcat-common'
 ]
 
