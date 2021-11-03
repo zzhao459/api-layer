@@ -9,5 +9,25 @@
  */
 package org.zowe.apiml.certificates.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.zowe.apiml.Stores;
+import org.zowe.apiml.certificates.ZoweConfiguration;
+
+import java.security.KeyStoreException;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestController
+@RequiredArgsConstructor
 public class StoresController {
+
+    private final ZoweConfiguration zoweConfiguration;
+
+    @GetMapping("/trusted-certs")
+    public Map<Object, Object> getListOfTrustedCerts() throws KeyStoreException {
+        Stores stores = new Stores(zoweConfiguration);
+        return stores.getListOfCertificates().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
+    }
 }
