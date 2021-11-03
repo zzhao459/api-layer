@@ -49,6 +49,7 @@ gitProperties {
 dependencies {
     implementation project(':onboarding-enabler-spring')
     implementation(project(':security-service-client-spring'))
+    implementation project(':certificate-analyser')
 
     implementation libraries.springFox
     implementation libraries.spring_boot_starter_actuator
