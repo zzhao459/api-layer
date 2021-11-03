@@ -116,6 +116,10 @@ public class Stores {
         }
     }
 
+    public void remove(String label) throws KeyStoreException {
+        this.trustStore.deleteEntry(label);
+    }
+
     public Certificate[] getServerCertificateChain(String alias) throws KeyStoreException {
         if (alias == null) {
             alias = keyStore.aliases().nextElement();
