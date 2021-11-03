@@ -29,6 +29,10 @@ import java.security.KeyStoreException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+
 @RestController
 @RequiredArgsConstructor
 public class StoresController {
@@ -38,38 +42,57 @@ public class StoresController {
     @GetMapping("/trusted-certs")
     public Map<Object, Object> getListOfTrustedCerts() throws KeyStoreException {
         Stores stores = new Stores(zoweConfiguration);
-        return stores.getListOfCertificates().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
+        return stores.getListOfCertificates().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
     }
 
     @GetMapping("/tso-cmd/{cmd}")
-    public String executeTSOCmd(@PathVariable("cmd")String cmd) throws IOException {
+    public String executeTSOCmd(@PathVariable("cmd") String cmd) throws IOException {
         return CommandExecutor.execute(cmd);
     }
-    
+
     /**
-     * Move one certificate from one store to another store Upload certificate
+     * Add to the truststore certificate of specific service. 
      * 
      * @return
      */
     @PostMapping("/certificate")
-    public ResponseEntity<?> addCertificate() {
+    public ResponseEntity<?> addCertificate(
+        @RequestParam("label") String label,
+        @RequestParam("url") String url
+    ) {
         Stores stores = new Stores(zoweConfiguration);
-        return null;
+        // TODO: Load the certificate
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
+     * Add uploaded certificate under selected label to the given keyring. 
      * 
-     * @return
+     * @return 200 when suceeded, 500 otherwise
      */
     @PostMapping("/certificate/upload")
-    public ResponseEntity<?> addUploadedCertificate(@RequestParam("certificate") MultipartFile certificate) {
-        return null;
+    public ResponseEntity<?> addUploadedCertificate(@RequestParam("certificate") MultipartFile certificateFile,
+            @RequestParam("label") String label) {
+        try {
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            X509Certificate certificate = (X509Certificate) cf.generateCertificate(certificateFile.getInputStream());
+            
+            Stores stores = new Stores(zoweConfiguration);
+            stores.add(label, certificate);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (KeyStoreException | IOException | CertificateException e) {
+            return new ResponseEntity<>("There was an issue with adding of the certificate to the truststore", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
-     * The expectation is that the current truststore contains the label and that the certificate is removed from the
-     * default truststore. 
-     * @return
+     * The expectation is that the current truststore contains the label and that
+     * the certificate is removed from the default truststore. If that's not the case
+     * return 400 otherwise 200
+     * 
+     * @return 200 when succeeds, 400 otherwise 
      */
     @DeleteMapping("/certificate")
     public ResponseEntity<String> removeCertificate(String label) {
@@ -78,7 +101,8 @@ public class StoresController {
             stores.remove(label);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (KeyStoreException exception) {
-            return new ResponseEntity<>("The certificate with provided label isn't part of the default truststore", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("The certificate with provided label isn't part of the default truststore",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }

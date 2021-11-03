@@ -120,6 +120,10 @@ public class Stores {
         this.trustStore.deleteEntry(label);
     }
 
+    public void add(String label, Certificate certificate) throws KeyStoreException {
+        this.trustStore.setCertificateEntry(label, certificate);
+    }
+
     public Certificate[] getServerCertificateChain(String alias) throws KeyStoreException {
         if (alias == null) {
             alias = keyStore.aliases().nextElement();
