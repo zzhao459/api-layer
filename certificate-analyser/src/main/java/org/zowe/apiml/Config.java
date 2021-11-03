@@ -24,11 +24,4 @@ public interface Config {
 
     String getKeyAlias();
 
-    String getRemoteUrl();
-
-    boolean isHelpRequested();
-
-    boolean isDoLocalHandshake();
-
-    boolean isClientCertAuth();
 }
