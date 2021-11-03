@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.zowe.apiml.HttpClient;
+import org.zowe.apiml.SSLContextFactory;
 import org.zowe.apiml.Stores;
 import org.zowe.apiml.certificates.ZoweConfiguration;
 import org.zowe.apiml.certificates.service.CommandExecutor;
 
 import java.io.IOException;
+import java.net.URL;
 import java.security.KeyStoreException;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,8 +55,8 @@ public class StoresController {
     }
 
     /**
-     * Add to the truststore certificate of specific service. 
-     * 
+     * Add to the truststore certificate of specific service.
+     *
      * @return
      */
     @PostMapping("/certificate")
@@ -62,14 +65,18 @@ public class StoresController {
         @RequestParam("url") String url
     ) {
         Stores stores = new Stores(zoweConfiguration);
+        SSLContextFactory factory = SSLContextFactory.initIgnoringSSLContext();
+        HttpClient httpClient = new HttpClient(factory.getSslContext());
+        httpClient.executeCall(new URL("https://google.com"));
+        return null;
         // TODO: Load the certificate
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
-     * Add uploaded certificate under selected label to the given keyring. 
-     * 
+     * Add uploaded certificate under selected label to the given keyring.
+     *
      * @return 200 when suceeded, 500 otherwise
      */
     @PostMapping("/certificate/upload")
@@ -78,7 +85,7 @@ public class StoresController {
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             X509Certificate certificate = (X509Certificate) cf.generateCertificate(certificateFile.getInputStream());
-            
+
             Stores stores = new Stores(zoweConfiguration);
             stores.add(label, certificate);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -91,8 +98,8 @@ public class StoresController {
      * The expectation is that the current truststore contains the label and that
      * the certificate is removed from the default truststore. If that's not the case
      * return 400 otherwise 200
-     * 
-     * @return 200 when succeeds, 400 otherwise 
+     *
+     * @return 200 when succeeds, 400 otherwise
      */
     @DeleteMapping("/certificate")
     public ResponseEntity<String> removeCertificate(String label) {

@@ -25,7 +25,7 @@ public class RemoteHandshake implements Verifier {
     }
 
     public void verify() {
-        String serviceAddress = sslContextFactory.getStores().getConf().getRemoteUrl();
+        String serviceAddress = ((ApimlConf)sslContextFactory.getStores().getConf()).getRemoteUrl();
         String trustStore = sslContextFactory.getStores().getConf().getTrustStore();
 
         try {

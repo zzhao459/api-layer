@@ -13,17 +13,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 
 public class CommandExecutor {
 
-    public static String execute(String command) throws IOException {
-        ProcessBuilder procBuilder = new ProcessBuilder("echo",command);
+    public static String execute(String... command) throws IOException {
+        ProcessBuilder procBuilder = new ProcessBuilder(command);
         Process process = procBuilder.start();
         InputStream stream = process.getInputStream();
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
-        while((line =reader.readLine())!=null){
+        while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
         return sb.toString();
