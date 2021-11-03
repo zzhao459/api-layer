@@ -30,10 +30,6 @@ public class ZoweConfiguration implements Config {
     private String keyStoreType;
     @Value("${server.ssl.keyAlias}")
     private String keyAlias;
-    private String remoteUrl;
-    private boolean doLocalHandshake;
-    private boolean helpRequested = false;
-    private boolean clientCertAuth;
 
     @Override
     public String getKeyStore() {
@@ -70,23 +66,4 @@ public class ZoweConfiguration implements Config {
         return keyAlias;
     }
 
-    @Override
-    public String getRemoteUrl() {
-        return remoteUrl;
-    }
-
-    @Override
-    public boolean isDoLocalHandshake() {
-        return doLocalHandshake;
-    }
-
-    @Override
-    public boolean isHelpRequested() {
-        return helpRequested;
-    }
-
-    @Override
-    public boolean isClientCertAuth() {
-        return clientCertAuth;
-    }
 }
