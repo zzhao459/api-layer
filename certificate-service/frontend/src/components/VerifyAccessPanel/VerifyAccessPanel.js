@@ -13,10 +13,17 @@ function VerifyAccessPanel() {
 
     const onSubmit = async values => {
         await sleep(300);
+
+        fetch(`/verify?url=${values.url}`, {
+            method: 'GET',
+            mode: 'cors'
+        });
         window.alert(JSON.stringify(values, 0, 2));
     };
     const validate = values => {
         const errors = {};
+
+
         if (!values.url) {
             errors.url = "Required";
         }
@@ -28,7 +35,7 @@ function VerifyAccessPanel() {
 
     const initialValues = useMemo(
             () => ({
-                url: "https://localhost:8080",
+                url: "",
             }),
             []
     );
@@ -44,10 +51,10 @@ function VerifyAccessPanel() {
         return (
             <Styles>
                 <h2> Verify access panel</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <label>Service URL</label>
-                        <input {...url.input} placeholder="First Name"/>
+                        <label>Hostname</label>
+                        <input {...url.input} placeholder="Service Hostname"/>
                         {url.meta.touched && url.meta.error && (
                             <span>{url.meta.error}</span>
                         )}
