@@ -7,9 +7,16 @@
 import React, { useState, useMemo } from "react";
 import { render } from "react-dom";
 import Styles from "./Style";
+import { styled } from '@mui/material/styles';
 import { useForm, useField } from "react-final-form-hooks";
-
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import './VerifyAccessPanel.css'
 function VerifyAccessPanel() {
+    const Input = styled('input')({
+        display: 'none',
+    });
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     const onSubmit = async values => {
@@ -66,8 +73,16 @@ function VerifyAccessPanel() {
                             Reset
                         </button>
                     </div>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                        <label htmlFor="contained-button-file">
+                            <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                            <Button variant="contained" component="span">
+                                Upload Certificate
+                            </Button>
+                        </label>
+                    </Stack>
                     <pre>
-                        LOG MESSAGES:
+                        LOG MESSAGES: error from backend
                         <br/>
                         </pre>
                 </form>
@@ -75,61 +90,6 @@ function VerifyAccessPanel() {
         );
 
 }
-//     const validationSchema = Yup.object().shape({
-//         url: Yup.string().required('URL is required')
-//     });
-//
-//     const {
-//         form,
-//         register,
-//         handleSubmit,
-//         reset,
-//         formState: { errors }
-//     } = useForm({
-//         resolver: yupResolver(validationSchema),
-//         mode: "all"
-//     });
-//
-//     const onSubmit = data => {
-//         console.log(JSON.stringify(data, null, 2));
-//     };
-//
-//     return (
-//         <div className="register-form">
-//             <Typography variant="h4" component="h2">
-//                 Verify access to a service
-//             </Typography>
-//             <br/>
-//             <br/>
-//             <br/>
-//             <form onSubmit={handleSubmit(onSubmit)}>
-//                 <div className="form-group">
-//                     <label> Service URL </label>
-//                     <input
-//                         name="url"
-//                         type="text"
-//                         {...register('url')}
-//                         className={`form-control ${errors.url ? 'is-invalid' : ''}`}
-//                     />
-//                     <div className="invalid-feedback">{errors.url?.message}</div>
-//                 </div>
-//                 <br/>
-//                 <div className="form-group">
-//                     <button type="submit" className="btn btn-primary">
-//                         Verify
-//                     </button>
-//                     <button
-//                         type="button"
-//                         onClick={form.reset()}
-//                         className="btn btn-warning float-right"
-//                     >
-//                         Reset
-//                     </button>
-//                 </div>
-//             </form>
-//         </div>
-//     );
-// }
 
 
 export default VerifyAccessPanel;

@@ -2,7 +2,7 @@ import { InputLabel } from '@mui/material';
 import { Component } from 'react';
 import BasicMenu from "../Menu/BasicMenu";
 import VerifyAccessPanel from "../VerifyAccessPanel/VerifyAccessPanel";
-import VerifyTrustedCertificate from '../VerifyTrustedCertificate/VerifyTrustedCertificate';
+import VerifyTrustedCertificatePanel from '../VerifyTrustedCertificatePanel/VerifyTrustedCertificatePanel';
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -17,15 +17,18 @@ export default class Dashboard extends Component {
 
     changePanel(specificPanel) {
         this.setState({
-            specificPanel: 'verifyTrustedCertificate'
+            specificPanel: specificPanel
         });
     }
 
     render() {
         let panel = (<VerifyAccessPanel></VerifyAccessPanel>);
 
-        if(this.state.specificPanel && this.state.specificPanel == "verifyTrustedCertificate") {
-            panel = (<VerifyTrustedCertificate></VerifyTrustedCertificate>);
+        if(this.state.specificPanel && this.state.specificPanel == "Verify the service is trusted") {
+            panel = (<VerifyTrustedCertificatePanel></VerifyTrustedCertificatePanel>);
+        }
+        else if (this.state.specificPanel && this.state.specificPanel == "Verify access to a service") {
+            panel = (<VerifyAccessPanel></VerifyAccessPanel>);
         }
 
         return (
