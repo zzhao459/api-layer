@@ -14,8 +14,8 @@ const VerifyTrustedCertificate = () => {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify({
-                url: url.input,
-                certificate: certificate.input
+                url: url.input.value,
+                certificate: certificate.input.value
             })                        
         });
     };
