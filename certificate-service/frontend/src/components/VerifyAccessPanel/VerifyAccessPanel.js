@@ -13,8 +13,8 @@ function VerifyAccessPanel() {
 
     const onSubmit = async values => {
         await sleep(300);
-
-        fetch(`/verify?url=${values.url}`, {
+        const url = process.env.REACT_APP_GATEWAY_URL + process.env.REACT_APP_CERTIFICATE_SERVICE_HOME `/verify?url=${values.url}`
+        fetch(url, {
             method: 'GET',
             mode: 'cors'
         });
