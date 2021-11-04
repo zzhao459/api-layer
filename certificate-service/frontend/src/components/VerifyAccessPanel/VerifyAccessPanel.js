@@ -11,22 +11,33 @@ function VerifyAccessPanel() {
     });
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const [serviceUrl, setServiceUrl] = React.useState(null);
+    const [certAlias, setCertAlias] = React.useState(null);
     const [errors, setErrors] =  React.useState(null);
     const onSubmit = async values => {
         await sleep(300);
-
-        // fetch(values.url, {
-        //     method: 'POST',
-        //     mode: 'cors'
-        // });
-        // window.alert(JSON.stringify(values, 0, 2));
+        const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?label=${certAlias}&url=${serviceUrl}`
+        fetch(url, {
+            method: 'POST',
+            mode: 'cors'
+        }).then((response) => {
+            if (response.ok) {
+                console.log(response);
+                alert("Certificate added to the truststore!");
+            } else if (!response.ok) {
+                throw Error(response.statusText);
+            }
+        }).catch((error) => {
+            console.log(error)
+            alert(error.message);
+            // setErrors(error.message)
+        });
     };
 
     const onVerify = async () => {
         await sleep(300);
         // TODO use the below commented URL to route through gateway
-        // const url = process.env.REACT_APP_GATEWAY_URL + process.env.REACT_APP_CERTIFICATE_SERVICE_HOME + `/verify?url=${serviceUrl}`
-        const url = `https://localhost:10020/certificate-service/verify?url=${serviceUrl}`;
+        const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/verify?url=${serviceUrl}`
+        // const url = `https://localhost:10020/certificate-service/verify?url=${serviceUrl}`;
         // const url = `/certificate-service/verify?url=${serviceUrl}`
         fetch(url, {
             method: 'GET',
@@ -45,6 +56,7 @@ function VerifyAccessPanel() {
         const errors = {};
 
         setServiceUrl(values.url)
+        setCertAlias(values.alias)
 
         if (!values.url) {
             errors.url = "Required";

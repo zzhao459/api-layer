@@ -8,7 +8,7 @@ class Header extends Component {
         return (
             <div className="header">
                 <div className="product-name">
-                    <Link href={"/"}>
+                    <Link href={"/ui/v1/certificate-service/#/dashboard"}>
                             <h1 >Certificate Service</h1>
                     </Link>
                 </div>
