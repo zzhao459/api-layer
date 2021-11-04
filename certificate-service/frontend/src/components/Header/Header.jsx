@@ -1,6 +1,6 @@
 import { Component } from 'react';
-import { TextField } from '@mui/material';
 import './Header.css';
+import Link from '@mui/material/Link';
 
 class Header extends Component {
 
@@ -8,9 +8,9 @@ class Header extends Component {
         return (
             <div className="header">
                 <div className="product-name">
-                        {/*<TextField element="h3" color="#ffffff">*/}
+                    <Link href={"/"}>
                             <h1 >Certificate Service</h1>
-                        {/*</TextField>*/}
+                    </Link>
                 </div>
             </div>
         );
