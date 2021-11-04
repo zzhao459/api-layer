@@ -1,15 +1,7 @@
-// import React from 'react';
-// import { useForm } from 'react-hook-form';
-// import { yupResolver } from '@hookform/resolvers/yup';
-// import * as Yup from 'yup';
-// import "./VerifyAccessPanel.css"
-// import { Typography } from '@material-ui/core'
-import React, { useState, useMemo } from "react";
-import { render } from "react-dom";
+import React, {  useMemo } from "react";
 import Styles from "./Style";
 import { styled } from '@mui/material/styles';
 import { useForm, useField } from "react-final-form-hooks";
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import './VerifyAccessPanel.css'
@@ -41,7 +33,7 @@ function VerifyAccessPanel() {
             []
     );
 
-        const {form, handleSubmit, values, pristine, submitting} = useForm({
+        const {form, handleSubmit, pristine, submitting} = useForm({
             onSubmit,
             initialValues,
             validate
