@@ -10,15 +10,9 @@
 package org.zowe.apiml.certificates.controller;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.zowe.apiml.HttpClient;
 import org.zowe.apiml.SSLContextFactory;
@@ -28,13 +22,16 @@ import org.zowe.apiml.certificates.service.CommandExecutor;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.KeyManagementException;
 import java.security.KeyStoreException;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,12 +43,12 @@ public class StoresController {
     public Map<Object, Object> getListOfTrustedCerts() throws KeyStoreException {
         Stores stores = new Stores(zoweConfiguration);
         return stores.getListOfCertificates().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
     }
 
-    @GetMapping("/tso-cmd/{cmd}")
-    public String executeTSOCmd(@PathVariable("cmd") String cmd) throws IOException {
-        return CommandExecutor.execute(cmd);
+    @GetMapping("/tso-cmd")
+    public String executeTSOCmd() throws IOException {
+        return CommandExecutor.execute();
     }
 
     /**
@@ -63,15 +60,19 @@ public class StoresController {
     public ResponseEntity<?> addCertificate(
         @RequestParam("label") String label,
         @RequestParam("url") String url
-    ) {
+    ) throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         Stores stores = new Stores(zoweConfiguration);
         SSLContextFactory factory = SSLContextFactory.initIgnoringSSLContext();
         HttpClient httpClient = new HttpClient(factory.getSslContext());
-        httpClient.executeCall(new URL("https://google.com"));
-        return null;
-        // TODO: Load the certificate
+        Certificate[] certificates = httpClient.getCertificateChain(new URL(url));
+        if (certificates != null && certificates.length > 1) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+            X509Certificate x509cert = (X509Certificate) certificates[1];
+            stores.add(label, x509cert);
+
+            return new ResponseEntity<>(x509cert.toString(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -81,7 +82,7 @@ public class StoresController {
      */
     @PostMapping("/certificate/upload")
     public ResponseEntity<?> addUploadedCertificate(@RequestParam("certificate") MultipartFile certificateFile,
-            @RequestParam("label") String label) {
+                                                    @RequestParam("label") String label) {
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             X509Certificate certificate = (X509Certificate) cf.generateCertificate(certificateFile.getInputStream());
@@ -109,7 +110,7 @@ public class StoresController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (KeyStoreException exception) {
             return new ResponseEntity<>("The certificate with provided label isn't part of the default truststore",
-                    HttpStatus.BAD_REQUEST);
+                HttpStatus.BAD_REQUEST);
         }
     }
 }

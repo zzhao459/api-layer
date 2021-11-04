@@ -3,6 +3,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:${gradleGitPropertiesVersion}")
+        classpath "com.github.node-gradle:gradle-node-plugin:3.1.1"
     }
 }
 
@@ -19,11 +20,23 @@ apply plugin: 'com.gorylenko.gradle-git-properties'
 apply from: "$projectDir/gradle/lite.gradle"
 apply plugin: 'com.google.cloud.tools.jib'
 apply from: "../gradle/jib.gradle"
+apply plugin: "com.github.node-gradle.node"
 
 def debugPort = 5128
 def componentName = "certificate-service"
 
 setJib(componentName, debugPort)
+
+node {
+    download = true
+    version = rootProject.nodejsVersion
+    distBaseUrl = "https://nodejs.org/dist"
+    npmInstallCommand = "ci"
+    workDir = file("${project.projectDir}/tools/nodejs")
+    npmWorkDir = file("${project.projectDir}/tools/npm")
+    yarnWorkDir = file("${project.projectDir}/tools/yarn")
+    nodeProjectDir = file("${project.projectDir}/frontend")
+}
 
 springBoot {
     // This statement tells the Gradle Spring Boot plugin to generate a file
@@ -98,3 +111,30 @@ publishing {
         }
     }
 }
+
+task javascriptClean(type: Delete) {
+    group = 'npm'
+    delete 'bin', 'build', 'frontend/test-results', 'frontend/coverage', 'frontend/build'
+
+    if (rootProject.cleanNodeModules == 'true') {
+        delete 'frontend/node_modules'
+    }
+}
+clean.dependsOn javascriptClean
+
+task npmBuild(type: NpmTask) {
+    group = 'npm'
+    description = "Executes npm build"
+    inputs.dir('frontend/src').withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.dir('frontend/public').withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file('frontend/.eslintrc').withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file('frontend/package.json').withPathSensitivity(PathSensitivity.RELATIVE)
+
+    outputs.dir('frontend/build')
+    outputs.cacheIf { true }
+
+    args = ['run', 'build']
+
+}
+npmBuild.dependsOn npmInstall
+build.dependsOn npmBuild
