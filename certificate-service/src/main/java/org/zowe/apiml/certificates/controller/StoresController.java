@@ -46,6 +46,20 @@ public class StoresController {
             .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
     }
 
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyUrl(@RequestParam("url") String url) throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        Stores stores = new Stores(zoweConfiguration);
+        SSLContextFactory factory = SSLContextFactory.initSSLContextWithoutKeystore(stores);
+        HttpClient httpClient = new HttpClient(factory.getSslContext());
+        try {
+            httpClient.getConnection(new URL("https://" + url));
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
+
+    }
+
     @GetMapping("/tso-cmd")
     public String executeTSOCmd() throws IOException {
         return CommandExecutor.execute();

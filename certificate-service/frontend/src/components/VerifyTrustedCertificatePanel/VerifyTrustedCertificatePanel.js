@@ -10,13 +10,13 @@ const VerifyTrustedCertificate = () => {
         await sleep(300);
         window.alert(JSON.stringify(values, 0, 2));
 
-        fetch("/certificate", {
+        fetch("/certificate/upload", {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify({
                 url: url.input.value,
                 certificate: certificate.input.value
-            })                        
+            })
         });
     };
 
