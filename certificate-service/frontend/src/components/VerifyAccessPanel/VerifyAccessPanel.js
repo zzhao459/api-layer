@@ -10,20 +10,35 @@ function VerifyAccessPanel() {
         display: 'none',
     });
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
+    const [serviceUrl, setServiceUrl] = React.useState(null);
     const onSubmit = async values => {
         await sleep(300);
-        const url = process.env.REACT_APP_GATEWAY_URL + process.env.REACT_APP_CERTIFICATE_SERVICE_HOME `/verify?url=${values.url}`
+
+        fetch(values.url, {
+            method: 'POST',
+            mode: 'cors'
+        });
+        // window.alert(JSON.stringify(values, 0, 2));
+    };
+
+    const onVerify = async () => {
+        await sleep(300);
+        // TODO use the below commented URL to route through gateway
+        // const url = process.env.REACT_APP_GATEWAY_URL + process.env.REACT_APP_CERTIFICATE_SERVICE_HOME + `/verify?url=${serviceUrl}`
+
+        const url = `certificate-service/verify?url=${serviceUrl}`
         fetch(url, {
             method: 'GET',
             mode: 'cors'
+        }).catch(() => {
+            alert("failed to fetch")
         });
-        window.alert(JSON.stringify(values, 0, 2));
     };
+
     const validate = values => {
         const errors = {};
 
-
+        setServiceUrl(values.url)
         if (!values.url) {
             errors.url = "Required";
         }
@@ -61,8 +76,15 @@ function VerifyAccessPanel() {
                     </div>
 
                     <div className="buttons">
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <label htmlFor="contained-button-file">
+                                <Button  style={{textTransform: 'none'}} onClick={onVerify} variant="contained" component="span">
+                                    Verify Service
+                                </Button>
+                            </label>
+                        </Stack>
                         <button type="submit" disabled={submitting}>
-                            Verify
+                            Add certificate
                         </button>
                         <button
                             type="button"
@@ -72,14 +94,6 @@ function VerifyAccessPanel() {
                             Reset
                         </button>
                     </div>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                        <label htmlFor="contained-button-file">
-                            <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                            <Button variant="contained" component="span">
-                                Upload Certificate
-                            </Button>
-                        </label>
-                    </Stack>
                     <pre>
                         LOG MESSAGES: error from backend
                         <br/>
