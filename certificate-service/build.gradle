@@ -127,7 +127,6 @@ task npmBuild(type: NpmTask) {
     description = "Executes npm build"
     inputs.dir('frontend/src').withPathSensitivity(PathSensitivity.RELATIVE)
     inputs.dir('frontend/public').withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.file('frontend/.eslintrc').withPathSensitivity(PathSensitivity.RELATIVE)
     inputs.file('frontend/package.json').withPathSensitivity(PathSensitivity.RELATIVE)
 
     outputs.dir('frontend/build')
@@ -136,5 +135,12 @@ task npmBuild(type: NpmTask) {
     args = ['run', 'build']
 
 }
+
+
+task copyUi(type: Copy) {
+    from 'frontend/build'
+    into 'src/main/resources/static'
+}
 npmBuild.dependsOn npmInstall
-build.dependsOn npmBuild
+copyUi.dependsOn npmBuild
+build.dependsOn copyUi
