@@ -4,10 +4,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import './BasicMenu.css';
 
-export default function BasicMenu() {
+export default function BasicMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
+        props.changePanel('verifyTrustedCertificate');
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
