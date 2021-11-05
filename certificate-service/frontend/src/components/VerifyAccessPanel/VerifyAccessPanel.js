@@ -10,7 +10,9 @@ function VerifyAccessPanel() {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const [serviceUrl, setServiceUrl] = React.useState(null);
     const [certAlias, setCertAlias] = React.useState(null);
+    const [pemCert, setPemCert] = React.useState(null);
     const [errors, setErrors] =  React.useState(null);
+
     const onSubmit = async () => {
         await sleep(300);
         const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?label=${certAlias}&url=${serviceUrl}`;
@@ -33,7 +35,6 @@ function VerifyAccessPanel() {
 
     const onVerify = async () => {
         await sleep(300);
-        // TODO use the below commented URL to route through gateway
         const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/verify?url=${serviceUrl}`
         fetch(url, {
             method: 'GET',
@@ -46,7 +47,24 @@ function VerifyAccessPanel() {
             console.log(error)
             setErrors(error.message);
         });
+        getCertificateInPemFormat();
     };
+
+    const getCertificateInPemFormat = () => {
+        const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?url=${serviceUrl}`
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors'
+        }).then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            setPemCert(response.json())
+        }).catch((error) => {
+            console.log(error)
+            setErrors(error.message);
+        });
+    }
 
     const validate = values => {
         const errors = {};
@@ -125,6 +143,13 @@ function VerifyAccessPanel() {
                         <br/>
                         </pre>
                     )}
+                    {
+                        pemCert != null && (
+                            <pre>
+                                {pemCert}
+                            </pre>
+                        )
+                    }
 
                 </form>
             </Styles>
