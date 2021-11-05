@@ -118,6 +118,7 @@ public class Stores {
 
     public void remove(String label) throws KeyStoreException {
         this.trustStore.deleteEntry(label);
+        //this.trustStore.store(stream, password);
     }
 
     public void add(String label, Certificate certificate) throws KeyStoreException {
