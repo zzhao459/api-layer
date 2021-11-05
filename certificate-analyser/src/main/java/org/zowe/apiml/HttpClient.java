@@ -12,7 +12,6 @@ package org.zowe.apiml;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.security.cert.Certificate;
 
@@ -25,14 +24,14 @@ public class HttpClient {
     }
 
     public int executeCall(URL url) throws IOException {
-       return getConnection(url).getResponseCode();
+        return getConnection(url).getResponseCode();
     }
 
-    public Certificate[] getCertificateChain(URL url) throws IOException{
-      return getConnection(url).getServerCertificates();
+    public Certificate[] getCertificateChain(URL url) throws IOException {
+        return getConnection(url).getServerCertificates();
     }
 
-    public HttpsURLConnection getConnection(URL url) throws IOException{
+    public HttpsURLConnection getConnection(URL url) throws IOException {
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("GET");
