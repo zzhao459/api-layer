@@ -30,6 +30,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,17 @@ public class StoresController {
     @GetMapping("/tso-cmd")
     public String executeTSOCmd() throws IOException {
         return CommandExecutor.execute();
+    }
+
+    @GetMapping("/certificate")
+    public ResponseEntity<String> getCertificateInPemFormat(@RequestParam("url") String url) throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        SSLContextFactory factory = SSLContextFactory.initIgnoringSSLContext();
+        HttpClient httpClient = new HttpClient(factory.getSslContext());
+        Certificate[] certificates = httpClient.getCertificateChain(new URL("https://" + url));
+        String certInPem = "-----BEGIN CERTIFICATE-----" + System.lineSeparator();
+        certInPem += new String(Base64.getEncoder().encode(certificates[1].getEncoded())) + System.lineSeparator();
+        certInPem += "-----END CERTIFICATE-----";
+        return new ResponseEntity<>(certInPem,HttpStatus.OK);
     }
 
     /**
