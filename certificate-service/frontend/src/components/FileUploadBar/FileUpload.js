@@ -25,14 +25,17 @@ const FileUpload = (props) => {
             setProgress(Math.round((100 * event.loaded) / event.total));
         })
             .then((response) => {
-                setMessage(response.data.message);
+                if (response.status === 200) {
+                    setMessage("The certificate has been uploaded to the truststore!");
+                    return response;
+                }
             })
             .then((files) => {
                 setFileInfos(files.data);
             })
-            .catch(() => {
+            .catch((error) => {
                 setProgress(0);
-                setMessage("Could not upload the file!");
+                setMessage(`Could not upload the file! Cause: ${error.message}`);
                 setCurrentFile(undefined);
             });
 
@@ -73,7 +76,6 @@ const FileUpload = (props) => {
             </div>
 
             <div className="card">
-                <div className="card-header">List of Files</div>
                 <ul className="list-group list-group-flush">
                     {fileInfos &&
                     fileInfos.map((file, index) => (

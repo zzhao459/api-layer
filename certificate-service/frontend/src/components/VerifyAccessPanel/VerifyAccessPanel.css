@@ -52,4 +52,6 @@
     border: 1px solid #285f8f;
 }
 
-
+.kNewOY form > div, .kNewOY div.form > div {
+    color: #de1b1b;
+}

@@ -43,8 +43,7 @@ function VerifyAccessPanel() {
                     throw Error(response.statusText);
                 }
         }).catch((error) => {
-            console.log(error)
-            setErrors(error.message);
+            setErrors(`Access verification failed due to the following error: ${error.message}`);
         });
     };
 
@@ -120,10 +119,9 @@ function VerifyAccessPanel() {
                         </button>
                     </div>
                     { errors && (
-                        <pre>
-                       {errors}
-                        <br/>
-                        </pre>
+                        <div className="alert alert-light" role="alert">
+                            {errors}
+                        </div>
                     )}
 
                 </form>
