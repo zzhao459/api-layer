@@ -9,17 +9,18 @@ const app = axios.create({
 
 const upload = (label, file, onUploadProgress) => {
     let formData = new FormData();
-    formData.append("file", file);
-    console.log(formData)
-    return app.post("/api/v1/certificate-service/certificate/upload", null, { params:{
-        certificate: formData,
-        label
-    }}, {
+    formData.append("certificate", file);
+    let config = {
         headers: {
             "Content-Type": "multipart/form-data",
         },
-        onUploadProgress,
-    });
+        params: {
+            certificate: formData,
+            label
+        },
+        onUploadProgress
+    }
+    return app.post("/api/v1/certificate-service/certificate/upload", formData, config);
 };
 
 

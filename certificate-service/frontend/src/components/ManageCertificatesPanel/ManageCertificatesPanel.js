@@ -5,6 +5,7 @@ import { useForm, useField } from "react-final-form-hooks";
 
 const ManageCertificatesPanel = () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const [pemCert, setPemCert] = React.useState(null);
 
     const onSubmit = async values => {
         await sleep(300);
@@ -38,6 +39,24 @@ const ManageCertificatesPanel = () => {
         }),
         []
     );
+
+    // TODO get list of certificate
+
+    // const getCertificateInPemFormat = () => {
+    //     const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?url=${serviceUrl}`
+    //     fetch(url, {
+    //         method: 'GET',
+    //         mode: 'cors'
+    //     }).then((response) => {
+    //         if (!response.ok) {
+    //             throw Error(response.statusText);
+    //         }
+    //         setPemCert(response.json())
+    //     }).catch((error) => {
+    //         console.log(error)
+    //         setErrors(error.message);
+    //     });
+    // }
 
     const { form, handleSubmit, values, pristine, submitting } = useForm({
         onSubmit,

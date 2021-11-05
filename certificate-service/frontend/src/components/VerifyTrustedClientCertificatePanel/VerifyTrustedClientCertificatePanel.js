@@ -1,9 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { render } from "react-dom";
 import Styles from "./Style";
 import { useForm, useField } from "react-final-form-hooks";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import FileUpload from "../FileUploadBar/FileUpload";
 const VerifyTrustedCertificate = () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -18,6 +15,9 @@ const VerifyTrustedCertificate = () => {
         fetch(url, {
             method: 'POST',
             mode: 'cors',
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
             body: JSON.stringify({
                 alias: alias,
                 certificate: formData
@@ -52,7 +52,7 @@ const VerifyTrustedCertificate = () => {
         []
     );
 
-    const { register, form, handleSubmit, pristine, submitting} = useForm({
+    const { form, handleSubmit, pristine, submitting} = useForm({
         onSubmit,
         initialValues,
         validate
