@@ -11,10 +11,10 @@ const upload = (url, file, onUploadProgress) => {
     let formData = new FormData();
     formData.append("file", file);
     console.log(formData)
-    return app.post("/api/v1/certificate-service/certificate/upload", {
-        url: url,
-        certificate: formData
-    }, {
+    return app.post("/api/v1/certificate-service/certificate/upload", null, { params:{
+        label: formData,
+        url
+    }}, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
