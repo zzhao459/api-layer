@@ -1,21 +1,19 @@
 import React, {  useMemo } from "react";
 import Styles from "./Style";
-import { styled } from '@mui/material/styles';
 import { useForm, useField } from "react-final-form-hooks";
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import './VerifyAccessPanel.css'
+
 function VerifyAccessPanel() {
-    const Input = styled('input')({
-        display: 'none',
-    });
+
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const [serviceUrl, setServiceUrl] = React.useState(null);
     const [certAlias, setCertAlias] = React.useState(null);
     const [errors, setErrors] =  React.useState(null);
-    const onSubmit = async values => {
+    const onSubmit = async () => {
         await sleep(300);
-        const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?label=${certAlias}&url=${serviceUrl}`
+        const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?label=${certAlias}&url=${serviceUrl}`;
         fetch(url, {
             method: 'POST',
             mode: 'cors'
@@ -37,8 +35,6 @@ function VerifyAccessPanel() {
         await sleep(300);
         // TODO use the below commented URL to route through gateway
         const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/verify?url=${serviceUrl}`
-        // const url = `https://localhost:10020/certificate-service/verify?url=${serviceUrl}`;
-        // const url = `/certificate-service/verify?url=${serviceUrl}`
         fetch(url, {
             method: 'GET',
             mode: 'cors'
@@ -48,15 +44,15 @@ function VerifyAccessPanel() {
                 }
         }).catch((error) => {
             console.log(error)
-            setErrors(error.message)
+            setErrors(error.message);
         });
     };
 
     const validate = values => {
         const errors = {};
 
-        setServiceUrl(values.url)
-        setCertAlias(values.alias)
+        setServiceUrl(values.url);
+        setCertAlias(values.alias);
 
         if (!values.url) {
             errors.url = "Required";
@@ -135,7 +131,6 @@ function VerifyAccessPanel() {
         );
 
 }
-
 
 export default VerifyAccessPanel;
 
