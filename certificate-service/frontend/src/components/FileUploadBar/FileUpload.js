@@ -21,7 +21,7 @@ const FileUpload = (props) => {
         setCurrentFile(currentFile);
 
         console.log(currentFile)
-        UploadService.upload(props.url, currentFile, (event) => {
+        UploadService.upload(props.label, currentFile, (event) => {
             setProgress(Math.round((100 * event.loaded) / event.total));
         })
             .then((response) => {
@@ -78,7 +78,7 @@ const FileUpload = (props) => {
                     {fileInfos &&
                     fileInfos.map((file, index) => (
                         <li className="list-group-item" key={index}>
-                            <a href={file.url}>{file.name}</a>
+                            <a href={file.label}>{file.name}</a>
                         </li>
                     ))}
                 </ul>

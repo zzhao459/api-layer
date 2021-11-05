@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import FileUpload from "../FileUploadBar/FileUpload";
 const VerifyTrustedCertificate = () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    const [serviceUrl, setServiceUrl] = useState(null);
+    const [alias, setAlias] = useState(null);
     const [errors, setErrors] =  useState(null);
     const onSubmit = async (data) => {
         await sleep(300);
@@ -19,7 +19,7 @@ const VerifyTrustedCertificate = () => {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify({
-                url: serviceUrl,
+                alias: alias,
                 certificate: formData
             })
         }).then((response) => {
@@ -37,7 +37,7 @@ const VerifyTrustedCertificate = () => {
 
     const validate = values => {
         const errors = {};
-        setServiceUrl(values.url);
+        setAlias(values.url);
         if (!values.url) {
             errors.url = "Required";
         }
@@ -65,16 +65,16 @@ const VerifyTrustedCertificate = () => {
             <h2> Verify trusted certificate panel</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Service URL</label>
+                    <label>Alias</label>
                     <input
-                        {...url.input} placeholder="Service URL" />
+                        {...url.input} placeholder="Certificate Alias" />
                     {url.meta.touched && url.meta.error && (
                         <span>{url.meta.error}</span>
                     )}
                 </div>
 
                 <div>
-                    <FileUpload url={serviceUrl}></FileUpload>
+                    <FileUpload label={alias}></FileUpload>
                 </div>
 
                 <div className="buttons">
