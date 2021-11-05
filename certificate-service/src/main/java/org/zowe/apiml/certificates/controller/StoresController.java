@@ -74,7 +74,7 @@ public class StoresController {
         String certInPem = "-----BEGIN CERTIFICATE-----" + System.lineSeparator();
         certInPem += new String(Base64.getEncoder().encode(certificates[1].getEncoded())) + System.lineSeparator();
         certInPem += "-----END CERTIFICATE-----";
-        return new ResponseEntity<>(certInPem,HttpStatus.OK);
+        return new ResponseEntity<>(certInPem, HttpStatus.OK);
     }
 
     /**
@@ -90,7 +90,7 @@ public class StoresController {
         Stores stores = new Stores(zoweConfiguration);
         SSLContextFactory factory = SSLContextFactory.initIgnoringSSLContext();
         HttpClient httpClient = new HttpClient(factory.getSslContext());
-        Certificate[] certificates = httpClient.getCertificateChain(new URL(url));
+        Certificate[] certificates = httpClient.getCertificateChain(new URL("https://" + url));
         if (certificates != null && certificates.length > 1) {
 
             X509Certificate x509cert = (X509Certificate) certificates[1];
