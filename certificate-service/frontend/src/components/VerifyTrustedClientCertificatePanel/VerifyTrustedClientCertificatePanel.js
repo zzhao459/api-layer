@@ -3,22 +3,24 @@ import { render } from "react-dom";
 import Styles from "./Style";
 import { useForm, useField } from "react-final-form-hooks";
 import Stack from "@mui/material/Stack";
-import {Input} from "@material-ui/core";
 import Button from "@mui/material/Button";
-
+import FileUpload from "../FileUploadBar/FileUpload";
 const VerifyTrustedCertificate = () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-    const onSubmit = async () => {
+    const [serviceUrl, setServiceUrl] = useState(null);
+    const [errors, setErrors] =  useState(null);
+    const onSubmit = async (data) => {
         await sleep(300);
         const url = process.env.REACT_APP_GATEWAY_URL + "/api/v1/certificate-service/certificate/upload";
+        let formData = new FormData();
 
+        formData.append('file', data.file[0]);
         fetch(url, {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify({
-                url: url.input.value,
-                certificate: certificate.input.value
+                url: serviceUrl,
+                certificate: formData
             })
         }).then((response) => {
             if (response.ok) {
@@ -28,19 +30,16 @@ const VerifyTrustedCertificate = () => {
                 throw Error(response.statusText);
             }
         }).catch((error) => {
-            console.log(error)
             alert(error.message);
-            // setErrors(error.message)
+            setErrors(error.message)
         });
     };
 
     const validate = values => {
         const errors = {};
+        setServiceUrl(values.url);
         if (!values.url) {
             errors.url = "Required";
-        }
-        if (!values.lastName) {
-            errors.lastName = "Required";
         }
         return errors;
     };
@@ -53,14 +52,13 @@ const VerifyTrustedCertificate = () => {
         []
     );
 
-    const { form, handleSubmit, values, pristine, submitting } = useForm({
+    const { register, form, handleSubmit, pristine, submitting} = useForm({
         onSubmit,
         initialValues,
         validate
     });
 
     const url = useField("url", form);
-    const certificate = useField("certificate", form);
 
     return (
         <Styles>
@@ -68,34 +66,18 @@ const VerifyTrustedCertificate = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Service URL</label>
-                    <input {...url.input} placeholder="Service URL" />
+                    <input
+                        {...url.input} placeholder="Service URL" />
                     {url.meta.touched && url.meta.error && (
                         <span>{url.meta.error}</span>
                     )}
                 </div>
 
                 <div>
-                    <label>Certificate to use</label>
-                    <input {...certificate.input} type="textarea" placeholder="Provide base64 encoded certificate." />
-                    {certificate.meta.touched && certificate.meta.error && (
-                        <span>{certificate.meta.error}</span>
-                    )}
+                    <FileUpload url={serviceUrl}></FileUpload>
                 </div>
-                {/*<div>*/}
-                {/*    <Stack direction="row" alignItems="center" spacing={2}>*/}
-                {/*        <label htmlFor="contained-button-file">*/}
-                {/*            <Input accept="image/*" id="contained-button-file" multiple type="file" />*/}
-                {/*            <Button variant="contained" component="span">*/}
-                {/*                Provide base64 encoded certificate*/}
-                {/*            </Button>*/}
-                {/*        </label>*/}
-                {/*    </Stack>*/}
-                {/*</div>*/}
 
                 <div className="buttons">
-                    <button type="submit" onClick={() => onSubmit()}>
-                        Verify
-                    </button>
                     <button
                         type="button"
                         onClick={() => form.reset()}
@@ -104,16 +86,17 @@ const VerifyTrustedCertificate = () => {
                         Reset
                     </button>
                 </div>
-                <pre>
-                    LOG MESSAGES:
-                    <br />
-                </pre>
+                { errors && (
+                    <pre>
+                       {errors}
+                        <br/>
+                        </pre>
+                )}
             </form>
         </Styles>
     );
 
 }
-
 
 export default VerifyTrustedCertificate;
 
