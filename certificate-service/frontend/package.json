@@ -49,6 +49,7 @@
         ]
     },
     "devDependencies": {
+        "@mui/lab": "^5.0.0-alpha.53",
         "axios": "^0.24.0",
         "cross-env": "5.2.0",
         "react-final-form-hooks": "^2.0.2"
