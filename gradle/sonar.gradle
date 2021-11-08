@@ -113,6 +113,13 @@ project(":caching-service-package") {
 }
 
 // Packaging project; sonar does not apply
+project(":certificate-service-package") {
+    sonarqube {
+        skipProject = true
+    }
+}
+
+// Packaging project; sonar does not apply
 project(":metrics-service-package") {
     sonarqube {
         skipProject = true

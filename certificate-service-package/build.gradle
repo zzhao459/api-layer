@@ -1,0 +1,48 @@
+ext {
+    artifactName = 'certificate-service-package'
+    pullNo = project.hasProperty("pullRequest") && project.getProperty("pullRequest") != null ? "-" + project.getProperty("pullRequest") : ""
+}
+
+configurations {
+    certificateServiceJar
+    zip
+}
+
+dependencies {
+    certificateServiceJar(project(path: ":certificate-service", configuration: "bootArchives"))
+}
+
+task packageCertificateService(type: Zip) {
+    archiveName = artifactName + pullNo + ".zip"
+    includeEmptyDirs = true
+    def resourceDir = 'src/main/resources/'
+
+    into('/') {
+        from "$resourceDir/manifest.yaml"
+    }
+
+    into('bin/') {
+        from configurations.certificateServiceJar
+        from "$resourceDir/bin/start.sh"
+        from "$resourceDir/bin/validate.sh"
+    }
+}
+
+jar.dependsOn(packageCertificateService)
+build.dependsOn(packageCertificateService)
+
+artifacts {
+    zip packageCertificateService
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact("$buildDir/distributions/$artifactName" + pullNo + ".zip")
+        }
+    }
+}
+
+jar {
+    enabled false
+}
