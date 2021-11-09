@@ -4,6 +4,8 @@ import { useForm, useField } from "react-final-form-hooks";
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import './VerifyAccessPanel.css'
+import '../../assets/css/APIMReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 function VerifyAccessPanel() {
 
@@ -11,6 +13,7 @@ function VerifyAccessPanel() {
     const [serviceUrl, setServiceUrl] = React.useState(null);
     const [certAlias, setCertAlias] = React.useState(null);
     const [errors, setErrors] =  React.useState(null);
+    const [message, setMessage] =  React.useState(null);
 
     const onSubmit = async () => {
         await sleep(300);
@@ -21,13 +24,22 @@ function VerifyAccessPanel() {
         }).then((response) => {
             if (response.ok) {
                 console.log(response);
-                alert("Certificate added to the truststore!");
+                setMessage("Certificate added to the truststore!");
+                toast.success(message, {
+                    closeOnClick: true,
+                    autoClose: 2000,
+                });
+                toast.dismiss();
             } else if (!response.ok) {
                 throw Error(response.statusText);
             }
         }).catch((error) => {
-            console.log(error)
-            alert(error.message);
+            setErrors(`Couldn't add the certificate due to the following error: ${error.message}`);
+            toast.error(errors, {
+                closeOnClick: true,
+                autoClose: 2000,
+            });
+            toast.dismiss();
             // setErrors(error.message)
         });
     };
@@ -42,8 +54,18 @@ function VerifyAccessPanel() {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
+            toast.success("The service is successfully accessible!", {
+                closeOnClick: true,
+                autoClose: 2000,
+            });
+            toast.dismiss();
         }).catch((error) => {
             setErrors(`Access verification failed due to the following error: ${error.message}`);
+            toast.error(errors, {
+                closeOnClick: true,
+                autoClose: 2000,
+            });
+            toast.dismiss();
         });
     };
 
@@ -82,6 +104,7 @@ function VerifyAccessPanel() {
         const alias = useField("alias", form);
 
         return (
+            <div>
             <Styles>
                 <h2> Verify access panel</h2>
                 <form onSubmit={handleSubmit}>
@@ -118,14 +141,13 @@ function VerifyAccessPanel() {
                             Reset
                         </button>
                     </div>
-                    { errors && (
-                        <div className="alert alert-light" role="alert">
-                            {errors}
-                        </div>
-                    )}
 
                 </form>
             </Styles>
+                {/*{ message && (*/}
+                    <ToastContainer />
+                {/*)}*/}
+            </div>
         );
 
 }

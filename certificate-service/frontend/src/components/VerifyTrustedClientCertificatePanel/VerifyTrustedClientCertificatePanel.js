@@ -2,37 +2,12 @@ import React, { useState, useMemo } from "react";
 import Styles from "./Style";
 import { useForm, useField } from "react-final-form-hooks";
 import FileUpload from "../FileUploadBar/FileUpload";
+
 const VerifyTrustedCertificate = () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const [alias, setAlias] = useState(null);
-    const [errors, setErrors] =  useState(null);
     const onSubmit = async (data) => {
-        await sleep(300);
-        const url = process.env.REACT_APP_GATEWAY_URL + "/api/v1/certificate-service/certificate/upload";
-        let formData = new FormData();
 
-        formData.append('file', data.file[0]);
-        fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-            body: JSON.stringify({
-                alias: alias,
-                certificate: formData
-            })
-        }).then((response) => {
-            if (response.ok) {
-                console.log(response);
-                alert("Certificate added to the truststore!");
-            } else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-        }).catch((error) => {
-            alert(error.message);
-            setErrors(error.message)
-        });
     };
 
     const validate = values => {
@@ -61,6 +36,7 @@ const VerifyTrustedCertificate = () => {
     const url = useField("url", form);
 
     return (
+        <div>
         <Styles>
             <h2> Verify trusted certificate panel</h2>
             <form onSubmit={handleSubmit}>
@@ -86,14 +62,9 @@ const VerifyTrustedCertificate = () => {
                         Reset
                     </button>
                 </div>
-                { errors && (
-                    <pre>
-                       {errors}
-                        <br/>
-                        </pre>
-                )}
             </form>
         </Styles>
+        </div>
     );
 
 }

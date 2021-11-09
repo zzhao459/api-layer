@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import UploadService from "../../services/FileUploadService";
 import "./FileUpload.css"
+import '../../assets/css/APIMReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const FileUpload = (props) => {
     const [selectedFiles, setSelectedFiles] = useState(undefined);
@@ -27,6 +29,11 @@ const FileUpload = (props) => {
             .then((response) => {
                 if (response.status === 200) {
                     setMessage("The certificate has been uploaded to the truststore!");
+                    toast.success("The certificate has been uploaded to the truststore!", {
+                        closeOnClick: true,
+                        autoClose: 2000,
+                    });
+                    toast.dismiss();
                     return response;
                 }
             })
@@ -35,7 +42,12 @@ const FileUpload = (props) => {
             })
             .catch((error) => {
                 setProgress(0);
-                setMessage(`Could not upload the file! Cause: ${error.message}`);
+                setMessage(`Couldn't add the certificate due to the following error: ${error.message}`);
+                toast.error(`Couldn't add the certificate due to the following error: ${error.message}`, {
+                    closeOnClick: true,
+                    autoClose: 2000,
+                });
+                toast.dismiss();
                 setCurrentFile(undefined);
             });
 
@@ -44,6 +56,7 @@ const FileUpload = (props) => {
 
     return (
         <div>
+            <ToastContainer />
             {currentFile && (
                 <div className="progress">
                     <div
@@ -71,9 +84,9 @@ const FileUpload = (props) => {
                 Upload certificate
             </button>
 
-            <div className="alert alert-light" role="alert">
-                {message}
-            </div>
+            {/*<div className="alert alert-light" role="alert">*/}
+            {/*    {message}*/}
+            {/*</div>*/}
 
             <div className="card">
                 <ul className="list-group list-group-flush">
