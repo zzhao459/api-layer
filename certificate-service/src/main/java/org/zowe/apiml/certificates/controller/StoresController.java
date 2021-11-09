@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class StoresController {
 
     private final ZoweConfiguration zoweConfiguration;
@@ -44,7 +45,7 @@ public class StoresController {
     public Map<Object, Object> getListOfTrustedCerts() throws KeyStoreException {
         Stores stores = new Stores(zoweConfiguration);
         return stores.getListOfCertificates().entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> ((X509Certificate)entry.getValue()).getSubjectDN().toString()));
     }
 
     @GetMapping("/verify")

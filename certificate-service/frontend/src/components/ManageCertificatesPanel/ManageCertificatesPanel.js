@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from "react";
-import { render } from "react-dom";
+import React, {useMemo, useState} from "react";
 import Styles from "./Style";
-import { useForm, useField } from "react-final-form-hooks";
-import LoadingButton from '@mui/lab/LoadingButton';
+import {useField, useForm} from "react-final-form-hooks";
 import {Box, FormControlLabel, Switch} from "@material-ui/core";
-import {TextareaAutosize} from "@mui/material";
+import {ListItem, TextareaAutosize, Typography} from "@mui/material";
+import List from '@mui/material/List';
+import ListItemText from '@mui/material/ListItemText';
 
 const ManageCertificatesPanel = () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -13,9 +13,12 @@ const ManageCertificatesPanel = () => {
     const [certAlias, setCertAlias] = useState(null);
     const [errors, setErrors] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [trustedCerts, setTrustedCerts] = React.useState(null);
+
     function handleClick() {
         setLoading(true);
     }
+
     const onSubmit = async values => {
         await sleep(300);
         window.alert(JSON.stringify(values, 0, 2));
@@ -54,9 +57,25 @@ const ManageCertificatesPanel = () => {
     );
 
     // TODO get list of certificate
-
+    const getListOfTrustedCertificates = async () => {
+        const url = process.env.REACT_APP_GATEWAY_URL + `/certificate-service/api/v1/trusted-certs`
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors'
+        }).then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response.text();
+        }).then(result => {
+            setTrustedCerts(JSON.parse(result));
+        }).catch((error) => {
+            console.log(error)
+            setErrors(error.message);
+        });
+    }
     const getCertificateInPemFormat = async () => {
-        const url = process.env.REACT_APP_GATEWAY_URL + `/api/v1/certificate-service/certificate?url=${serviceUrl}`
+        const url = process.env.REACT_APP_GATEWAY_URL + `/certificate-service/api/v1/certificate?url=${serviceUrl}`
         fetch(url, {
             method: 'GET',
             mode: 'cors'
@@ -73,7 +92,7 @@ const ManageCertificatesPanel = () => {
         });
     }
 
-    const { form, handleSubmit, values, pristine, submitting } = useForm({
+    const {form, handleSubmit, values, pristine, submitting} = useForm({
         onSubmit,
         initialValues,
         validate
@@ -91,6 +110,33 @@ const ManageCertificatesPanel = () => {
         console.log("Add Certificate");
     }
 
+    const items = [];
+    if (trustedCerts !== null) {
+        for (const item in trustedCerts) {
+            items.push(
+                <List>
+                <ListItem alignItems={"flex-start"}>
+                    <ListItemText primary={"LABEL: " + `${item}`}
+                                  secondary={<React.Fragment>
+                                      <Typography
+                                          sx={{ display: 'inline' }}
+                                          component="span"
+                                          variant="body2"
+                                          color="text.primary"
+                                      >
+                                          Distinguished Name:
+                                      </Typography>
+                                      {`${trustedCerts[item]}`}
+                                  </React.Fragment>}
+                                  />
+                </ListItem>
+                </List>
+        )
+
+        }
+
+    }
+
     return (
         <Styles>
             <h2>Manage certificates</h2>
@@ -102,16 +148,20 @@ const ManageCertificatesPanel = () => {
 
                 <tr>
                     <td>Label 1</td>
-                    <td><button onClick={() => removeCertificate("Label 1")}>Remove</button></td>
+                    <td>
+                        <button onClick={() => removeCertificate("Label 1")}>Remove</button>
+                    </td>
                 </tr>
 
                 <tr>
                     <td>Label 2</td>
-                    <td><button onClick={() => removeCertificate("Label 2")}>Remove</button></td>
+                    <td>
+                        <button onClick={() => removeCertificate("Label 2")}>Remove</button>
+                    </td>
                 </tr>
             </table>
             <form>
-                <Box sx={{ '& > button': { m: 1 } }}>
+                <Box sx={{'& > button': {m: 1}}}>
                     <FormControlLabel
                         sx={{
                             display: 'block',
@@ -128,8 +178,8 @@ const ManageCertificatesPanel = () => {
                     />
                 </Box>
                 <div>
-                    <label disabled={!loading} >Hostname</label>
-                    <input disabled={!loading} {...url.input} placeholder="Service Hostname" />
+                    <label disabled={!loading}>Hostname</label>
+                    <input disabled={!loading} {...url.input} placeholder="Service Hostname"/>
                     {url.meta.touched && url.meta.error && (
                         <span>{url.meta.error}</span>
                     )}
@@ -139,24 +189,35 @@ const ManageCertificatesPanel = () => {
                         Get certificate
                     </button>
                 </div>
-                { pemCert !== null && (
+                {pemCert !== null && (
                     <TextareaAutosize
                         aria-label="minimum height"
                         minRows={3}
                         defaultValue={pemCert}
-                        style={{ width: 200 }}
+                        style={{width: 200}}
                     />
                 )}
+                <div className="buttons">
+                    <button type="submit" onClick={getListOfTrustedCertificates}>
+                        Get list of trusted certificates
+                    </button>
+                </div>
+                {trustedCerts !== null && (
+                    <List sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
+                        {items}
+                    </List>
+                )}
+
                 <div>
-                    <label >Alias</label>
-                    <input {...alias.input} placeholder="Certificate Alias" />
+                    <label>Alias</label>
+                    <input {...alias.input} placeholder="Certificate Alias"/>
                     {alias.meta.touched && alias.meta.error && (
                         <span>{alias.meta.error}</span>
                     )}
                 </div>
                 <div>
                     <label>Certificate to use</label>
-                    <input {...certificate.input} type="textarea" placeholder="Provide base64 encoded certificate." />
+                    <input {...certificate.input} type="textarea" placeholder="Provide base64 encoded certificate."/>
                     {certificate.meta.touched && certificate.meta.error && (
                         <span>{certificate.meta.error}</span>
                     )}
