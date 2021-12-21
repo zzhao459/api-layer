@@ -114,7 +114,7 @@ bootRun {
     systemProperties = System.properties
 }
 
-bootJar.archiveName = "${bootJar.baseName}.jar"
+bootJar.archiveFileName = "${bootJar.baseName}.jar"
 
 jar {
     enabled true

@@ -3,9 +3,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:${gradleGitPropertiesVersion}")
-        classpath ("org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r") {
-            force = true
-        }
+        classpath ("org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r!!")
     }
 }
 
@@ -47,12 +45,6 @@ springBoot {
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/${name}/build/resources/main/META-INF")
-}
-
-configurations.all {
-    resolutionStrategy {
-        force (libraries.jetty_websocket_client, libraries.spring_security_web, libraries.spring_security_config)
-    }
 }
 
 dependencies {
@@ -105,7 +97,6 @@ dependencies {
     implementation libraries.spring_web
     implementation libraries.spring_webmvc
     implementation libraries.spring_websocket
-
 
     implementation libraries.springFox
 

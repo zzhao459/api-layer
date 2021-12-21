@@ -19,36 +19,36 @@ repositories {
 }
 
 dependencies {
-    testCompile libraries.http_client
-    testCompile libraries.eureka_client
-    testCompile libraries.jackson_dataformat_yaml
-    testCompile libraries.jackson_databind
-    testCompile libraries.json_path
-    testCompile libraries.spring_boot_starter_websocket
-    testCompile libraries.spring_boot_starter_actuator
-    testCompile libraries.spring_boot_starter_webflux
-    testCompile libraries.spring_web_test_client
-    testCompile libraries.json
-    testCompile libraries.jjwt
-    testCompile libraries.reactorTest
-    testCompile(project(':apiml-security-common'))
-    testCompile(project(':zaas-client'))
+    testCompileOnly libraries.http_client
+    testCompileOnly libraries.eureka_client
+    testCompileOnly libraries.jackson_dataformat_yaml
+    testCompileOnly libraries.jackson_databind
+    testCompileOnly libraries.json_path
+    testCompileOnly libraries.spring_boot_starter_websocket
+    testCompileOnly libraries.spring_boot_starter_actuator
+    testCompileOnly libraries.spring_boot_starter_webflux
+    testCompileOnly libraries.spring_web_test_client
+    testCompileOnly libraries.json
+    testCompileOnly libraries.jjwt
+    testCompileOnly libraries.reactorTest
+    testCompileOnly(project(':apiml-security-common'))
+    testCompileOnly(project(':zaas-client'))
 
-    testCompile libraries.hamcrest
-    testCompile libraries.rest_assured
-    testCompile libraries.awaitility
-    testCompile libraries.logback_classic
-    testCompile libraries.lombok
+    testCompileOnly libraries.hamcrest
+    testCompileOnly libraries.rest_assured
+    testCompileOnly libraries.awaitility
+    testCompileOnly libraries.logback_classic
+    testCompileOnly libraries.lombok
     testAnnotationProcessor libraries.lombok
-    testCompile libraries.jsoup
-    testCompile libraries.rest_assured
-    testCompile(libraries.jackson_core)
-    testCompile(libraries.jackson_databind)
-    testCompile libraries.jackson_dataformat_yaml
-    testCompile libraries.javax_servlet_api
-    testCompile libraries.nimbusJoseJwt
-    runtime libraries.jjwt_impl
-    runtime libraries.jjwt_jackson
+    testCompileOnly libraries.jsoup
+    testCompileOnly libraries.rest_assured
+    testCompileOnly(libraries.jackson_core)
+    testCompileOnly(libraries.jackson_databind)
+    testCompileOnly libraries.jackson_dataformat_yaml
+    testCompileOnly libraries.javax_servlet_api
+    testCompileOnly libraries.nimbusJoseJwt
+    runtimeOnly libraries.jjwt_impl
+    runtimeOnly libraries.jjwt_jackson
 
     testFixturesImplementation(project(':apiml-security-common'))
     testFixturesImplementation libraries.rest_assured

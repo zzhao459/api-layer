@@ -39,5 +39,5 @@ dependencies {
 
 jar {
     baseName = "onboarding-enabler-spring"
-    archiveName = "${baseName}.jar"
+    archiveFileName = "${baseName}.jar"
 }
