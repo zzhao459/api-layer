@@ -42,6 +42,9 @@ export default class Login extends Component {
                 x => x.messageKey != null && x.messageKey === error.messageNumber
             );
             if (filter.length !== 0) messageText = `(${error.messageNumber}) ${filter[0].messageText}`;
+            if (error.messageNumber === 'ZWEAS199E') {
+                messageText = `(${error.messageNumber}) ${filter[0].messageText}`;
+            }
         } else if (error.status === 401 && authentication.sessionOn) {
             messageText = `(${errorMessages.messages[0].messageKey}) ${errorMessages.messages[0].messageText}`;
             authentication.onCompleteHandling();
@@ -59,16 +62,19 @@ export default class Login extends Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        const { username, password } = this.state;
+        const { username, password, newPassword } = this.state;
         const { login } = this.props;
-
+        debugger;
         if (username && password) {
             login({ username, password });
+        }
+        if (username && password && newPassword) {
+            login({ username, password, newPassword });
         }
     }
 
     render() {
-        const { username, password, errorMessage } = this.state;
+        const { username, password, errorMessage, newPassword, repeatNewPassword } = this.state;
         const { authentication, isFetching } = this.props;
         let messageText;
         if (
@@ -81,6 +87,7 @@ export default class Login extends Component {
         } else if (errorMessage) {
             messageText = errorMessage;
         }
+        debugger;
         return (
             <div className="login-object">
                 <div className="login-form">
@@ -105,31 +112,68 @@ export default class Login extends Component {
                                         className="form"
                                         onSubmit={this.handleSubmit}
                                     >
-                                        <FormField label="Username" className="formfield">
-                                            <TextInput
-                                                id="username"
-                                                data-testid="username"
-                                                name="username"
-                                                type="text"
-                                                size="jumbo"
-                                                value={username}
-                                                onChange={this.handleChange}
-                                                autocomplete
-                                            />
-                                        </FormField>
-                                        <FormField label="Password" className="formfield">
-                                            <TextInput
-                                                id="password"
-                                                data-testid="password"
-                                                name="password"
-                                                type="password"
-                                                size="jumbo"
-                                                value={password}
-                                                onChange={this.handleChange}
-                                                caption="Default: password"
-                                                autocomplete
-                                            />
-                                        </FormField>
+                                        {authentication === null ||
+                                            (authentication.error.messageNumber !== 'ZWEAS199E' && (
+                                                <FormField label="Username" className="formfield">
+                                                    <TextInput
+                                                        id="username"
+                                                        data-testid="username"
+                                                        name="username"
+                                                        type="text"
+                                                        size="jumbo"
+                                                        value={username}
+                                                        onChange={this.handleChange}
+                                                        autocomplete
+                                                    />
+                                                </FormField>
+                                            ))}
+                                        {messageText !== 'helevole' && (
+                                            <FormField label="Password" className="formfield">
+                                                <TextInput
+                                                    id="password"
+                                                    data-testid="password"
+                                                    name="password"
+                                                    type="password"
+                                                    size="jumbo"
+                                                    value={password}
+                                                    onChange={this.handleChange}
+                                                    caption="Default: password"
+                                                    autocomplete
+                                                />
+                                            </FormField>
+                                        )}
+                                        {messageText !== undefined &&
+                                            messageText === 'helevole' && (
+                                                <FormField label="NewPassword" className="formfield">
+                                                    <TextInput
+                                                        id="new-password"
+                                                        data-testid="new-password"
+                                                        name="newPassword"
+                                                        type="password"
+                                                        size="jumbo"
+                                                        value={newPassword}
+                                                        onChange={this.handleChange}
+                                                        caption="Default: new password"
+                                                        autocomplete
+                                                    />
+                                                </FormField>
+                                            )}
+                                        {messageText !== undefined &&
+                                            messageText === 'helevole' && (
+                                                <FormField label="RepeatNewPassword" className="formfield">
+                                                    <TextInput
+                                                        id="repeatNewPassword"
+                                                        data-testid="repeatNewPassword"
+                                                        name="repeatNewPassword"
+                                                        type="password"
+                                                        size="jumbo"
+                                                        value={repeatNewPassword}
+                                                        onChange={this.handleChange}
+                                                        caption="Default: Repeat new password"
+                                                        autocomplete
+                                                    />
+                                                </FormField>
+                                            )}
                                         <FormField className="formfield" label="">
                                             <Button
                                                 type="submit"
