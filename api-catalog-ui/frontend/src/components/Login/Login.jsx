@@ -19,6 +19,7 @@ export default class Login extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.backToLogin = this.backToLogin.bind(this);
     }
 
     isDisabled = () => {
@@ -26,7 +27,8 @@ export default class Login extends Component {
         return isFetching;
     };
 
-    handleError = error => {
+    handleError = auth => {
+        const { error, expired } = auth;
         let messageText;
         const { authentication } = this.props;
         // eslint-disable-next-line global-require
@@ -42,7 +44,7 @@ export default class Login extends Component {
                 x => x.messageKey != null && x.messageKey === error.messageNumber
             );
             if (filter.length !== 0) messageText = `(${error.messageNumber}) ${filter[0].messageText}`;
-            if (error.messageNumber === 'ZWEAS199E') {
+            if (error.messageNumber === 'ZWEAS199E' || error.messageNumber === 'ZWEAS198E') {
                 messageText = `(${error.messageNumber}) ${filter[0].messageText}`;
             }
         } else if (error.status === 401 && authentication.sessionOn) {
@@ -51,12 +53,24 @@ export default class Login extends Component {
         } else if (error.status === 500) {
             messageText = `(${errorMessages.messages[1].messageKey}) ${errorMessages.messages[1].messageText}`;
         }
-        return messageText;
+        return { messageText, expired };
     };
 
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
+        if (name === 'repeatNewPassword') {
+            const { newPassword } = this.state;
+            const { validateInput } = this.props;
+            validateInput({ newPassword, repeatNewPassword: value });
+        }
+    }
+
+    backToLogin() {
+        this.setState({ newPassword: null });
+        this.setState({ repeatNewPassword: null });
+        const { returnToLogin } = this.props;
+        returnToLogin();
     }
 
     handleSubmit(e) {
@@ -64,28 +78,28 @@ export default class Login extends Component {
 
         const { username, password, newPassword } = this.state;
         const { login } = this.props;
-        debugger;
-        if (username && password) {
-            login({ username, password });
-        }
         if (username && password && newPassword) {
             login({ username, password, newPassword });
+        } else if (username && password) {
+            login({ username, password });
         }
     }
 
     render() {
         const { username, password, errorMessage, newPassword, repeatNewPassword } = this.state;
         const { authentication, isFetching } = this.props;
-        let messageText;
+        let error = { messageText: null, expired: false };
         if (
             authentication !== undefined &&
             authentication !== null &&
             authentication.error !== undefined &&
             authentication.error !== null
         ) {
-            messageText = this.handleError(authentication.error);
+            error = this.handleError(authentication);
         } else if (errorMessage) {
-            messageText = errorMessage;
+            error.messageText = errorMessage;
+        } else if (authentication !== null) {
+            error.expired = authentication.expired;
         }
         debugger;
         return (
@@ -112,22 +126,21 @@ export default class Login extends Component {
                                         className="form"
                                         onSubmit={this.handleSubmit}
                                     >
-                                        {authentication === null ||
-                                            (authentication.error.messageNumber !== 'ZWEAS199E' && (
-                                                <FormField label="Username" className="formfield">
-                                                    <TextInput
-                                                        id="username"
-                                                        data-testid="username"
-                                                        name="username"
-                                                        type="text"
-                                                        size="jumbo"
-                                                        value={username}
-                                                        onChange={this.handleChange}
-                                                        autocomplete
-                                                    />
-                                                </FormField>
-                                            ))}
-                                        {messageText !== 'helevole' && (
+                                        {!error.expired && (
+                                            <FormField label="Username" className="formfield">
+                                                <TextInput
+                                                    id="username"
+                                                    data-testid="username"
+                                                    name="username"
+                                                    type="text"
+                                                    size="jumbo"
+                                                    value={username}
+                                                    onChange={this.handleChange}
+                                                    autocomplete
+                                                />
+                                            </FormField>
+                                        )}
+                                        {!error.expired && (
                                             <FormField label="Password" className="formfield">
                                                 <TextInput
                                                     id="password"
@@ -142,38 +155,50 @@ export default class Login extends Component {
                                                 />
                                             </FormField>
                                         )}
-                                        {messageText !== undefined &&
-                                            messageText === 'helevole' && (
-                                                <FormField label="NewPassword" className="formfield">
-                                                    <TextInput
-                                                        id="new-password"
-                                                        data-testid="new-password"
-                                                        name="newPassword"
-                                                        type="password"
-                                                        size="jumbo"
-                                                        value={newPassword}
-                                                        onChange={this.handleChange}
-                                                        caption="Default: new password"
-                                                        autocomplete
-                                                    />
-                                                </FormField>
-                                            )}
-                                        {messageText !== undefined &&
-                                            messageText === 'helevole' && (
-                                                <FormField label="RepeatNewPassword" className="formfield">
-                                                    <TextInput
-                                                        id="repeatNewPassword"
-                                                        data-testid="repeatNewPassword"
-                                                        name="repeatNewPassword"
-                                                        type="password"
-                                                        size="jumbo"
-                                                        value={repeatNewPassword}
-                                                        onChange={this.handleChange}
-                                                        caption="Default: Repeat new password"
-                                                        autocomplete
-                                                    />
-                                                </FormField>
-                                            )}
+                                        {error.expired && (
+                                            <FormField label="NewPassword" className="formfield">
+                                                <TextInput
+                                                    id="newPassword"
+                                                    data-testid="newPassword"
+                                                    name="newPassword"
+                                                    type="password"
+                                                    size="jumbo"
+                                                    value={newPassword}
+                                                    onChange={this.handleChange}
+                                                    caption="Default: new password"
+                                                    autocomplete
+                                                />
+                                            </FormField>
+                                        )}
+                                        {error.expired && (
+                                            <FormField label="RepeatNewPassword" className="formfield">
+                                                <TextInput
+                                                    id="repeatNewPassword"
+                                                    data-testid="repeatNewPassword"
+                                                    name="repeatNewPassword"
+                                                    type="password"
+                                                    size="jumbo"
+                                                    value={repeatNewPassword}
+                                                    onChange={this.handleChange}
+                                                    caption="Default: Repeat new password"
+                                                    autocomplete
+                                                />
+                                            </FormField>
+                                        )}
+                                        {error.expired && (
+                                            <FormField className="formfield" label="">
+                                                <Button
+                                                    onClick={this.backToLogin}
+                                                    data-testid="submit"
+                                                    primary
+                                                    fullWidth
+                                                    disabled={this.isDisabled()}
+                                                    size="jumbo"
+                                                >
+                                                    BACK
+                                                </Button>
+                                            </FormField>
+                                        )}
                                         <FormField className="formfield" label="">
                                             <Button
                                                 type="submit"
@@ -183,7 +208,7 @@ export default class Login extends Component {
                                                 disabled={this.isDisabled()}
                                                 size="jumbo"
                                             >
-                                                Sign in
+                                                {error.expired ? 'CHANGE PASSWORD' : 'Sign in'}
                                             </Button>
                                         </FormField>
                                         <FormField className="formfield form-spinner" label="">
@@ -195,12 +220,13 @@ export default class Login extends Component {
                                                 }}
                                             />
                                         </FormField>
-                                        {messageText !== undefined &&
-                                            messageText !== null && (
+                                        {error.messageText !== undefined &&
+                                            error.messageText !== null && (
                                                 <FormField className="error-message" label="">
                                                     <div id="error-message">
                                                         <p className="error-message-content">
-                                                            <IconDanger color="#de1b1b" size="2rem" /> {messageText}
+                                                            <IconDanger color="#de1b1b" size="2rem" />
+                                                            {error.messageText}
                                                         </p>
                                                     </div>
                                                 </FormField>
