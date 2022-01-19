@@ -98,8 +98,6 @@ export default class Login extends Component {
             error = this.handleError(authentication);
         } else if (errorMessage) {
             error.messageText = errorMessage;
-        } else if (authentication !== null) {
-            error.expired = authentication.expired;
         }
         debugger;
         return (
@@ -179,6 +177,7 @@ export default class Login extends Component {
                                                     type="password"
                                                     size="jumbo"
                                                     value={repeatNewPassword}
+                                                    variant="danger"
                                                     onChange={this.handleChange}
                                                     caption="Default: Repeat new password"
                                                     autocomplete
