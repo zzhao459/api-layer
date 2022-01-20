@@ -57,3 +57,7 @@
 #error-message {
     align-self: baseline;
 }
+
+.susp-card {
+    padding: 300px 0;
+}
