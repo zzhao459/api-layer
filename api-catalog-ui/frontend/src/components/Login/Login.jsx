@@ -45,8 +45,8 @@ export default class Login extends Component {
             const filter = errorMessages.messages.filter(
                 x => x.messageKey != null && x.messageKey === error.messageNumber
             );
-            invalidNewPassword = error.messageNumber === 'ZWEAS198E' || error.messageNumber === 'ZWEAS196E';
-            isSuspended = error.messageNumber === 'ZWEAS197E';
+            invalidNewPassword = error.messageNumber === 'ZWEAT603E' || error.messageNumber === 'ZWEAT413E';
+            isSuspended = error.messageNumber === 'ZWEAT414E';
             if (filter.length !== 0) messageText = `(${error.messageNumber}) ${filter[0].messageText}`;
             if (invalidNewPassword || isSuspended) {
                 messageText = `(${error.messageNumber}) ${filter[0].messageText}`;
@@ -100,6 +100,8 @@ export default class Login extends Component {
             authentication.error !== null
         ) {
             error = this.handleError(authentication);
+            const va = process.env;
+            debugger;
             if (error.isSuspended) {
                 return (
                     <div className="login-object">
@@ -109,7 +111,7 @@ export default class Login extends Component {
                                     <CardTitle>{error.messageText}</CardTitle>
                                     <CardBlock>
                                         {username} account has been suspended. Contact your security administrator to
-                                        unsuspend your account.
+                                        unsuspend your account. {}
                                     </CardBlock>
                                     <Button
                                         onClick={this.backToLogin}
