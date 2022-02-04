@@ -26,20 +26,22 @@ public class ExtensionsLoader implements ApplicationListener<ApplicationContextI
 
     @Override
     public void onApplicationEvent(ApplicationContextInitializedEvent event) {
+        log.info("on ApplicationContextInitializedEvent");
         if (!(event.getApplicationContext() instanceof BeanDefinitionRegistry)) {
+            log.error("Expected Spring context to be a BeanDefinitionRegistry. Exiting Gateway Service");
             SpringApplication.exit(event.getApplicationContext(), () -> 1);
         } else {
             BeanDefinitionRegistry registry = (BeanDefinitionRegistry) event.getApplicationContext();
             ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
 
-            scanner.scan("com.somecompany"); // get this from somewhere else
+            scanner.scan("com.broadcom.idt"); // get this from somewhere else
 
-            String[] names = scanner.getRegistry().getBeanDefinitionNames();
-            for (String name : names) {
+            String[] beanNames = scanner.getRegistry().getBeanDefinitionNames();
+            for (String name : beanNames) {
                 if (!registry.containsBeanDefinition(name)) {
                     registry.registerBeanDefinition(name, scanner.getRegistry().getBeanDefinition(name));
                 } else {
-                    log.error("Bean with name " + name + " is already registered in the context");
+                    log.info("Bean with name " + name + " is already registered in the context");
                 }
             }
         }
