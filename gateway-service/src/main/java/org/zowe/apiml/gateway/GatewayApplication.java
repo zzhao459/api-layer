@@ -22,6 +22,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.zowe.apiml.gateway.context.ExtensionsLoader;
 import org.zowe.apiml.gateway.ribbon.GatewayRibbonConfig;
 import org.zowe.apiml.product.monitoring.LatencyUtilsConfigInitializer;
 import org.zowe.apiml.product.service.ServiceStartupEventHandler;
@@ -51,6 +52,7 @@ public class GatewayApplication implements ApplicationListener<ApplicationReadyE
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(GatewayApplication.class);
         app.addInitializers(new LatencyUtilsConfigInitializer());
+        app.addListeners(new ExtensionsLoader());
         app.setLogStartupInfo(false);
         new BuildInfo().logBuildInfo();
         app.run(args);
