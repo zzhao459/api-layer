@@ -9,6 +9,8 @@
  */
 package org.zowe.apiml.gateway;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -22,13 +24,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.zowe.apiml.gateway.context.ExtensionsLoader;
+import org.zowe.apiml.extension.ExtensionConfigReader;
+import org.zowe.apiml.extension.ExtensionsLoader;
 import org.zowe.apiml.gateway.ribbon.GatewayRibbonConfig;
 import org.zowe.apiml.product.monitoring.LatencyUtilsConfigInitializer;
 import org.zowe.apiml.product.service.ServiceStartupEventHandler;
 import org.zowe.apiml.product.version.BuildInfo;
-
-import javax.annotation.Nonnull;
 
 @EnableZuulProxy
 @EnableWebSecurity
@@ -38,7 +39,8 @@ import javax.annotation.Nonnull;
     value = {
         "org.zowe.apiml.gateway",
         "org.zowe.apiml.product",
-        "org.zowe.apiml.security.common"},
+        "org.zowe.apiml.security.common"
+    },
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*RibbonConfig")
     }
@@ -52,7 +54,7 @@ public class GatewayApplication implements ApplicationListener<ApplicationReadyE
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(GatewayApplication.class);
         app.addInitializers(new LatencyUtilsConfigInitializer());
-        app.addListeners(new ExtensionsLoader());
+        app.addListeners(new ExtensionsLoader(new ExtensionConfigReader()));
         app.setLogStartupInfo(false);
         new BuildInfo().logBuildInfo();
         app.run(args);
