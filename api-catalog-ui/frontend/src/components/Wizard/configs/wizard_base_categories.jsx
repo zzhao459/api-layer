@@ -10,10 +10,12 @@ export const baseCategories = [
                 question: 'A unique identifier for the API (service ID):',
                 maxLength: 40,
                 lowercase: true,
+                tooltip: 'e.g. sampleservice',
             },
             title: {
                 value: '',
                 question: 'The name of the service (human readable):',
+                tooltip: 'e.g. Hello API ML',
             },
         },
     },
@@ -23,6 +25,7 @@ export const baseCategories = [
             description: {
                 value: '',
                 question: 'A concise description of the service:',
+                tooltip: 'e.g. Sample API ML REST Service.',
             },
         },
     },
@@ -33,6 +36,7 @@ export const baseCategories = [
                 value: '',
                 question: 'The base URL of the service (the consistent part of the web address):',
                 validUrl: true,
+                tooltip: 'https://${samplehost}: ${sampleport}/${sampleservice}',
             },
         },
     },
@@ -51,18 +55,23 @@ export const baseCategories = [
             scheme: {
                 value: 'https',
                 question: 'Service scheme:',
+                tooltip: 'https',
             },
             hostname: {
                 value: '',
                 question: 'Service hostname:',
+                tooltip: 'hostname can be externalized by specifying -Dapiml.service.hostname command line parameter',
             },
             port: {
                 value: '',
                 question: 'Service port:',
+                tooltip: 'port can be externalized by specifying -Dapiml.service.port command line parameter',
             },
             contextPath: {
                 value: '',
                 question: 'Context path:',
+                tooltip:
+                    "By default the contextPath is set to be the same as apiml.service.serviceId, but doesn't have to be the same",
             },
         },
     },
@@ -74,6 +83,7 @@ export const baseCategories = [
                 question: 'The service IP address:',
                 optional: true,
                 regexRestriction: [wizRegex.ipAddress],
+                tooltip: 'e.g. https://localhost:3000/',
             },
         },
     },
@@ -85,18 +95,21 @@ export const baseCategories = [
                 question: 'The relative path to the home page of the service:',
                 optional: true,
                 regexRestriction: [wizRegex.validRelativeUrl],
+                tooltip: 'e.g. /application/home',
             },
             statusPageRelativeUrl: {
                 value: '',
                 question: 'The relative path to the status page of the service:',
                 optional: true,
                 regexRestriction: [wizRegex.validRelativeUrl],
+                tooltip: 'e.g. /application/info',
             },
             healthCheckRelativeUrl: {
                 value: '',
                 question: 'The relative path to the health check endpoint of the service:',
                 optional: true,
                 regexRestriction: [wizRegex.validRelativeUrl],
+                tooltip: 'e.g. /application/health',
             },
         },
     },
@@ -107,6 +120,7 @@ export const baseCategories = [
                 value: '',
                 question: 'Discovery Service URL:',
                 validUrl: true,
+                tooltip: 'e.g. https://${discoveryServiceHost1}: ${discoveryServicePort1}/eureka',
             },
         },
         multiple: false,
@@ -124,6 +138,7 @@ export const baseCategories = [
             serviceUrl: {
                 value: '',
                 question: 'Service API common context path:',
+                tooltip: 'e.g. /sampleservice/api/v1',
             },
         },
         help:
@@ -143,6 +158,7 @@ export const baseCategories = [
                 value: '',
                 question: 'A service APPLID (valid only for the httpBasicPassTicket authentication scheme ):',
                 dependencies: { scheme: 'httpBasicPassTicket' },
+                tooltip: 'e.g. ZOWEAPPL',
             },
             headers: {
                 value: 'X-Certificate-Public',
@@ -165,6 +181,7 @@ export const baseCategories = [
             apiId: {
                 value: '',
                 question: 'A unique identifier to the API in the API ML:',
+                tooltip: 'e.g. zowe.apiml.sampleservice',
             },
             version: {
                 value: '',
@@ -182,11 +199,13 @@ export const baseCategories = [
                 value: '',
                 question: 'The Http or Https address where the Swagger JSON document is available:',
                 optional: true,
+                tooltip: 'e.g. http://${sampleServiceSwaggerHost}: ${sampleServiceSwaggerPort}/ sampleservice/api-doc',
             },
             documentationUrl: {
                 value: '',
                 question: 'Link to the external documentation:',
                 optional: true,
+                tooltip: 'http://',
             },
         },
     },
@@ -207,14 +226,17 @@ export const baseCategories = [
             title: {
                 value: '',
                 question: 'The title of the product family of the API service:',
+                tooltip: 'e.g. Hello API ML',
             },
             description: {
                 value: '',
                 question: 'A description of the API service product family:',
+                tooltip: 'e.g. Sample application to demonstrate exposing a REST API in the ZOWE API ML',
             },
             version: {
                 value: '',
                 question: 'The semantic version of this API Catalog tile (increase when adding changes):',
+                tooltip: 'e.g. 1.0.0',
             },
         },
         interference: 'catalog',
@@ -233,6 +255,7 @@ export const baseCategories = [
             keyAlias: {
                 value: '',
                 question: 'The alias used to address the private key in the keystore',
+                tooltip: 'e.g. localhost',
             },
             keyPassword: {
                 value: '',
@@ -242,6 +265,7 @@ export const baseCategories = [
             keyStore: {
                 value: '',
                 question: 'The keystore file used to store the private key (keyring: set to SAF keyring location):',
+                tooltip: 'e.g. keystore/localhost.keystore.p12',
             },
             keyStorePassword: {
                 value: '',
@@ -256,6 +280,7 @@ export const baseCategories = [
             trustStore: {
                 value: '',
                 question: 'The truststore file used to keep other parties public keys and certificates:',
+                tooltip: 'e.g. keystore/localhost.truststore.p12',
             },
             trustStorePassword: {
                 value: '',
