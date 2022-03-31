@@ -9,7 +9,6 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
-import org.springframework.security.core.Authentication;
 
 public interface SafResourceAccessVerifying {
 
