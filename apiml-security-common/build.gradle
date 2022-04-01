@@ -1,4 +1,5 @@
 dependencies {
+    compile(project(':mock-zos'))
     compile(project(':apiml-common'))
     compile libraries.spring_boot_starter_web
     compile libraries.spring_security_web
@@ -6,7 +7,7 @@ dependencies {
     compile libraries.apache_commons_lang3
     compile libraries.bcprov;
     compile libraries.bcpkix;
-    
+
 
     compileOnly libraries.javax_servlet_api
     compileOnly libraries.lombok

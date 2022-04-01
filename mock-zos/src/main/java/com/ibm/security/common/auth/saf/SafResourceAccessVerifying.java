@@ -7,22 +7,11 @@
  *
  * Copyright Contributors to the Zowe Project.
  */
-package org.zowe.apiml.security.common.auth.saf;
+package com.ibm.security.common.auth.saf;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public enum AccessLevel {
+public interface SafResourceAccessVerifying {
 
-        READ(1),
-        UPDATE(2),
-        CONTROL(3),
-        ALTER(4)
-
-    ;
-
-    @Getter
-    private final int value;
+    boolean hasSafResourceAccess(Authentication authentication, String resourceClass, String resourceName, String accessLevel);
 
 }

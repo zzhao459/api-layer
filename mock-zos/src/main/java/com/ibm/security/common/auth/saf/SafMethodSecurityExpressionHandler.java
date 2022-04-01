@@ -7,8 +7,10 @@
  *
  * Copyright Contributors to the Zowe Project.
  */
-package org.zowe.apiml.security.common.auth.saf;
+package com.ibm.security.common.auth.saf;
 
+import com.ibm.security.common.auth.saf.SafMethodSecurityExpressionRoot;
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import lombok.RequiredArgsConstructor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
