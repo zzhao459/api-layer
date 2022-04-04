@@ -9,8 +9,7 @@
  */
 package com.ibm.security.common.auth.saf;
 
-import com.ibm.security.common.auth.saf.SafMethodSecurityExpressionRoot;
-import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
+import com.ibm.security.common.auth.config.SafSecurityConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -18,7 +17,6 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
-import org.zowe.apiml.security.common.config.SafSecurityConfigurationProperties;
 
 @RequiredArgsConstructor
 public class SafMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
@@ -38,3 +36,4 @@ public class SafMethodSecurityExpressionHandler extends DefaultMethodSecurityExp
     }
 
 }
+

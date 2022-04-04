@@ -2,6 +2,10 @@ dependencies {
     implementation libraries.lombok
     implementation libraries.apache_commons_text
 
+    compile libraries.spring_boot_starter_web
+    compile libraries.spring_security_web
+    compile libraries.spring_security_config
+
     annotationProcessor libraries.lombok
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'

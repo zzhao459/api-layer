@@ -9,6 +9,7 @@
  */
 package com.ibm.security.common.auth.saf;
 
+import org.springframework.security.core.Authentication;
 
 public interface SafResourceAccessVerifying {
 

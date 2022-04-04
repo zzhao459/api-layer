@@ -11,10 +11,10 @@ package com.ibm.security.common.auth.saf;
 
 import lombok.Getter;
 import lombok.Setter;
+import com.ibm.security.common.auth.config.SafSecurityConfigurationProperties;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
-import org.springframework.security.core.Authentication;
-import org.zowe.apiml.security.common.config.SafSecurityConfigurationProperties;
 
 public class SafMethodSecurityExpressionRoot extends SecurityExpressionRoot
     implements MethodSecurityExpressionOperations {

@@ -7,7 +7,9 @@
  *
  * Copyright Contributors to the Zowe Project.
  */
-package org.zowe.apiml.security.common.auth.saf;
+package com.ibm.security.common.auth.saf;
+
+import com.ibm.security.common.auth.saf.PlatformReturned;
 
 import java.lang.reflect.Field;
 

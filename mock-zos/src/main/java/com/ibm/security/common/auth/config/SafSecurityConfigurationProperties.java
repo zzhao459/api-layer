@@ -7,7 +7,7 @@
  *
  * Copyright Contributors to the Zowe Project.
  */
-package org.zowe.apiml.security.common.config;
+package com.ibm.security.common.auth.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

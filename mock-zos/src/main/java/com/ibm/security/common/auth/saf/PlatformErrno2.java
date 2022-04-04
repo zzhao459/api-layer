@@ -7,7 +7,7 @@
  *
  * Copyright Contributors to the Zowe Project.
  */
-package org.zowe.apiml.security.common.auth.saf;
+package com.ibm.security.common.auth.saf;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -198,7 +198,7 @@ public enum PlatformErrno2 {
     JRTLSAddressLengthInvalid("JRTLSAddressLengthInvalid", 0x00cb, "An invalid address length has been passed for task level security"),  // NOSONAR
     JRTLSCallerIsIPT("JRTLSCallerIsIPT", 0x00cc, "The calling task is IPT"),  // NOSONAR
     JRTLSNotDoneByOE("JRTLSNotDoneByOE", 0x00cd, "Task level security already exists, but it was not created by a previous call to pthread_security_np"),  // NOSONAR
-    JRNoPtraceTaskSec("JRNoPtraceTaskSec", 0x00ce, "Ptrace is active in the caller’s address space, task level security not allowed concurrently with Ptrace"),  // NOSONAR
+    JRNoPtraceTaskSec("JRNoPtraceTaskSec", 0x00ce, "Ptrace is active in the caller's address space, task level security not allowed concurrently with Ptrace"),  // NOSONAR
     JRSAFResourceUndefined("JRSAFResourceUndefined", 0x00cf, "The resource specified by the caller is not defined to RACF"),  // NOSONAR
     JRSAFParmListErr("JRSAFParmListErr", 0x00d0, "A SAF service was unsuccessful because an error was detected by SAF in the parameter list"),  // NOSONAR
     JRSAFNoUUIDtoUser("JRSAFNoUUIDtoUser", 0x00d1, "No mapping to a RACF userid exists for the DCE UUID specified"),  // NOSONAR
