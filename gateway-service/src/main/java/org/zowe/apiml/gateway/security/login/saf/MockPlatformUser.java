@@ -9,7 +9,7 @@
  */
 package org.zowe.apiml.gateway.security.login.saf;
 
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import org.zowe.apiml.security.common.error.PlatformPwdErrno;
 
 public class MockPlatformUser implements PlatformUser {

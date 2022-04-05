@@ -9,13 +9,13 @@
  */
 package org.zowe.apiml.gateway.error.check;
 
+import com.ibm.security.common.auth.saf.EndpointImproprietyConfigureException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.zowe.apiml.message.api.ApiMessageView;
 import org.zowe.apiml.message.core.MessageService;
-import org.zowe.apiml.security.common.auth.saf.EndpointImproprietyConfigureException;
 import org.zowe.apiml.security.common.auth.saf.UnsupportedResourceClassException;
 
 import javax.servlet.http.HttpServletRequest;

@@ -9,6 +9,8 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
+import com.ibm.security.common.auth.saf.PlatformReturnedHelper;
 import lombok.Builder;
 
 import org.junit.jupiter.api.Test;

@@ -9,6 +9,9 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
+import com.ibm.security.common.auth.saf.AccessLevel;
+import com.ibm.security.common.auth.saf.SafResourceAccessSaf;
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import lombok.Builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

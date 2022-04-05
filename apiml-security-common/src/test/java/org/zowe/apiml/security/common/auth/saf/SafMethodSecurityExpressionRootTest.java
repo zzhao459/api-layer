@@ -9,13 +9,15 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
+import com.ibm.security.common.auth.config.SafSecurityConfigurationProperties;
+import com.ibm.security.common.auth.saf.SafMethodSecurityExpressionRoot;
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
-import org.zowe.apiml.security.common.config.SafSecurityConfigurationProperties;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;

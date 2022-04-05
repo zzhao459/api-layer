@@ -9,8 +9,8 @@
  */
 package org.zowe.apiml.security.common.error;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import org.springframework.security.core.AuthenticationException;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 
 public class ZosAuthenticationException extends AuthenticationException {
 

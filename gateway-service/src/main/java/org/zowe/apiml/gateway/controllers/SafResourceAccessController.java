@@ -10,6 +10,7 @@
 
 package org.zowe.apiml.gateway.controllers;
 
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.*;
 import org.springframework.http.*;
@@ -19,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.zowe.apiml.message.api.ApiMessageView;
 import org.zowe.apiml.message.core.MessageService;
-import org.zowe.apiml.security.common.auth.saf.AccessLevel;
-import org.zowe.apiml.security.common.auth.saf.SafResourceAccessVerifying;
 
 import javax.servlet.http.HttpServletRequest;
 

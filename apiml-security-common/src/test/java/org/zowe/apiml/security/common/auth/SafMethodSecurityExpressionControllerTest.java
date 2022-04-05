@@ -10,6 +10,9 @@
 package org.zowe.apiml.security.common.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.security.common.auth.config.SafSecurityConfigurationProperties;
+import com.ibm.security.common.auth.saf.SafMethodSecurityExpressionHandler;
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import org.apache.http.HttpHeaders;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
@@ -38,10 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zowe.apiml.message.core.MessageService;
 import org.zowe.apiml.message.yaml.YamlMessageService;
-import org.zowe.apiml.security.common.auth.saf.SafMethodSecurityExpressionHandler;
 import org.zowe.apiml.security.common.auth.saf.SafResourceAccessDummy;
-import org.zowe.apiml.security.common.auth.saf.SafResourceAccessVerifying;
-import org.zowe.apiml.security.common.config.SafSecurityConfigurationProperties;
 import org.zowe.apiml.security.common.content.BasicContentFilter;
 import org.zowe.apiml.security.common.error.AuthExceptionHandler;
 import org.zowe.apiml.security.common.error.ResourceAccessExceptionHandler;

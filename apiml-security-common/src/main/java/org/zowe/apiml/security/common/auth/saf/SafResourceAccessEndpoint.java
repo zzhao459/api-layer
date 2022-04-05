@@ -9,6 +9,8 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
+import com.ibm.security.common.auth.saf.EndpointImproprietyConfigureException;
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

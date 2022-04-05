@@ -10,6 +10,7 @@
 package org.zowe.apiml.security.common.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.zowe.apiml.message.core.Message;
 import org.zowe.apiml.message.core.MessageService;
 import org.zowe.apiml.message.yaml.YamlMessageService;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 import org.zowe.apiml.security.common.token.*;
 
 import javax.servlet.ServletException;

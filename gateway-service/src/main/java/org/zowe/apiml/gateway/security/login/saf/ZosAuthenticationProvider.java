@@ -10,6 +10,7 @@
  */
 package org.zowe.apiml.gateway.security.login.saf;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -20,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.zowe.apiml.gateway.security.login.LoginProvider;
 import org.zowe.apiml.gateway.security.service.AuthenticationService;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 import org.zowe.apiml.security.common.error.ZosAuthenticationException;
 import org.zowe.apiml.security.common.login.LoginRequest;
 

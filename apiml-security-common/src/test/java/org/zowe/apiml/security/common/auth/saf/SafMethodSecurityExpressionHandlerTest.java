@@ -9,6 +9,9 @@
  */
 package org.zowe.apiml.security.common.auth.saf;
 
+import com.ibm.security.common.auth.config.SafSecurityConfigurationProperties;
+import com.ibm.security.common.auth.saf.SafMethodSecurityExpressionHandler;
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +24,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.zowe.apiml.security.common.config.SafSecurityConfigurationProperties;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;

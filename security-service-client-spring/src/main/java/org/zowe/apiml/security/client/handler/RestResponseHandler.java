@@ -19,7 +19,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.zowe.apiml.product.gateway.GatewayNotAvailableException;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 import org.zowe.apiml.security.common.error.AuthMethodNotSupportedException;
 import org.zowe.apiml.security.common.error.ErrorType;
 import org.zowe.apiml.security.common.error.ServiceNotAccessibleException;
@@ -27,6 +26,7 @@ import org.zowe.apiml.security.common.error.ZosAuthenticationException;
 import org.zowe.apiml.security.common.token.InvalidTokenTypeException;
 import org.zowe.apiml.security.common.token.TokenNotProvidedException;
 import org.zowe.apiml.security.common.token.TokenNotValidException;
+import com.ibm.security.common.auth.saf.PlatformReturned;
 
 import javax.validation.constraints.NotNull;
 

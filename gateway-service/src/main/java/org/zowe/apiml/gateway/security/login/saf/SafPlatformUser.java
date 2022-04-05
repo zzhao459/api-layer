@@ -9,9 +9,9 @@
  */
 package org.zowe.apiml.gateway.security.login.saf;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
+import com.ibm.security.common.auth.saf.PlatformReturnedHelper;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturnedHelper;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

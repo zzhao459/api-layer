@@ -10,9 +10,9 @@
 
 package org.zowe.apiml.security.common.error;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
