@@ -10,8 +10,8 @@
 
 package org.zowe.apiml.gateway.security.login.saf;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import org.junit.jupiter.api.*;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 import org.zowe.apiml.security.common.error.PlatformPwdErrno;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

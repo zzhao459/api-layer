@@ -10,6 +10,7 @@
 
 package org.zowe.apiml.gateway.controllers;
 
+import com.ibm.security.common.auth.saf.SafResourceAccessVerifying;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.MediaType;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.zowe.apiml.message.core.MessageService;
 import org.zowe.apiml.message.yaml.YamlMessageService;
-import org.zowe.apiml.security.common.auth.saf.SafResourceAccessVerifying;
 import org.zowe.apiml.security.common.token.TokenAuthentication;
 
 import static javax.servlet.http.HttpServletResponse.*;

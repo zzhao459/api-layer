@@ -9,10 +9,10 @@
  */
 package org.zowe.apiml.gateway.security.login.saf;
 
+import com.ibm.security.common.auth.saf.PlatformReturned;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.zowe.apiml.security.common.auth.saf.PlatformReturned;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;

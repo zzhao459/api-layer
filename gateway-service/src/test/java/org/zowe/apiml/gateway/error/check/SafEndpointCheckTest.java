@@ -9,6 +9,7 @@
  */
 package org.zowe.apiml.gateway.error.check;
 
+import com.ibm.security.common.auth.saf.EndpointImproprietyConfigureException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,7 +21,6 @@ import org.zowe.apiml.message.api.ApiMessage;
 import org.zowe.apiml.message.api.ApiMessageView;
 import org.zowe.apiml.message.core.MessageService;
 import org.zowe.apiml.message.yaml.YamlMessageService;
-import org.zowe.apiml.security.common.auth.saf.EndpointImproprietyConfigureException;
 import org.zowe.apiml.security.common.auth.saf.UnsupportedResourceClassException;
 
 import java.util.List;
