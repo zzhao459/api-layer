@@ -27,7 +27,7 @@ public class SafMethodSecurityExpressionHandler extends DefaultMethodSecurityExp
     private final SafResourceAccessVerifying safResourceAccessVerifying;
 
     @Override
-    protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
+    public MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
         SafMethodSecurityExpressionRoot root = new SafMethodSecurityExpressionRoot(safSecurityConfigurationProperties, safResourceAccessVerifying, authentication);
         root.setPermissionEvaluator(getPermissionEvaluator());
         root.setTrustResolver(TRUST_RESOLVER);
