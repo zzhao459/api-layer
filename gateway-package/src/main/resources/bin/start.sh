@@ -164,6 +164,60 @@ fi
 #    -Dapiml.security.auth.jwtKeyAlias=${PKCS11_TOKEN_LABEL:-jwtsecret} \
 
 GATEWAY_CODE=AG
+echo "${ZWE_zowe_job_prefix}${GATEWAY_CODE} java \
+          -Xms32m -Xmx256m \
+          ${QUICK_START} \
+          -Dibm.serversocket.recover=true \
+          -Dfile.encoding=UTF-8 \
+          -Djava.io.tmpdir=/tmp \
+          -Dspring.profiles.active=${ZWE_configs_spring_profiles_active:-} \
+          -Dspring.profiles.include=$LOG_LEVEL \
+          -Dapiml.service.hostname=${ZWE_haInstance_hostname:-localhost} \
+          -Dapiml.service.port=${ZWE_configs_port:-7554} \
+          -Dapiml.service.discoveryServiceUrls=${ZWE_DISCOVERY_SERVICES_LIST:-"https://${ZWE_haInstance_hostname:-localhost}:${ZWE_components_discovery_port:-7553}/eureka/"} \
+          -Dapiml.service.allowEncodedSlashes=${ZWE_configs_apiml_service_allowEncodedSlashes:-true} \
+          -Dapiml.service.corsEnabled=${ZWE_configs_apiml_service_corsEnabled:-false} \
+          -Dapiml.catalog.serviceId=${APIML_GATEWAY_CATALOG_ID:-apicatalog} \
+          -Dapiml.cache.storage.location=${ZWE_zowe_workspaceDirectory}/api-mediation/ \
+          -Dapiml.logs.location=${ZWE_zowe_logDirectory} \
+          -Dapiml.gateway.timeoutMillis=${ZWE_configs_apiml_gateway_timeoutMillis:-600000} \
+          -Dapiml.security.ssl.verifySslCertificatesOfServices=${verifySslCertificatesOfServices:-false} \
+          -Dapiml.security.ssl.nonStrictVerifySslCertificatesOfServices=${nonStrictVerifySslCertificatesOfServices:-false} \
+          -Dapiml.security.auth.zosmf.serviceId=${ZWE_configs_apiml_security_auth_zosmf_serviceId:-zosmf} \
+          -Dapiml.security.auth.provider=${ZWE_configs_apiml_security_auth_provider:-zosmf} \
+          -Dapiml.zoweManifest=${ZWE_zowe_runtimeDirectory}/manifest.json \
+          -Dserver.address=0.0.0.0 \
+          -Dserver.maxConnectionsPerRoute=${ZWE_configs_server_maxConnectionsPerRoute:-100} \
+          -Dserver.maxTotalConnections=${ZWE_configs_server_maxTotalConnections:-1000} \
+          -Dserver.ssl.enabled=${ZWE_configs_server_ssl_enabled:-true} \
+          -Dserver.ssl.keyStore="${ZWE_configs_certificate_keystore_file:-${ZWE_zowe_certificate_keystore_file}}" \
+          -Dserver.ssl.keyStoreType="${ZWE_configs_certificate_keystore_type:-${ZWE_zowe_certificate_keystore_type:-PKCS12}}" \
+          -Dserver.ssl.keyStorePassword="${ZWE_configs_certificate_keystore_password:-${ZWE_zowe_certificate_keystore_password}}" \
+          -Dserver.ssl.keyAlias="${ZWE_configs_certificate_keystore_alias:-${ZWE_zowe_certificate_keystore_alias}}" \
+          -Dserver.ssl.keyPassword="${ZWE_configs_certificate_keystore_password:-${ZWE_zowe_certificate_keystore_password}}" \
+          -Dserver.ssl.trustStore="${ZWE_configs_certificate_truststore_file:-${ZWE_zowe_certificate_truststore_file}}" \
+          -Dserver.ssl.trustStoreType="${ZWE_configs_certificate_truststore_type:-${ZWE_zowe_certificate_truststore_type:-PKCS12}}" \
+          -Dserver.ssl.trustStorePassword="${ZWE_configs_certificate_truststore_password:-${ZWE_zowe_certificate_truststore_password}}" \
+          -Dserver.internal.enabled=${ZWE_configs_server_internal_enabled:-false} \
+          -Dserver.internal.ssl.enabled=${ZWE_configs_server_internal_ssl_enabled:-true} \
+          -Dserver.internal.port=${ZWE_configs_server_internal_port:-10017} \
+          -Dserver.internal.ssl.keyAlias=${ZWE_configs_server_internal_ssl_certificate_keystore_alias:-localhost-multi} \
+          -Dserver.internal.ssl.keyStore=${ZWE_configs_server_internal_ssl_certificate_keystore_file:-keystore/localhost/localhost-multi.keystore.p12} \
+          -Dapiml.security.auth.zosmf.jwtAutoconfiguration=${ZWE_configs_apiml_security_auth_zosmf_jwtAutoconfiguration:-auto} \
+          -Dapiml.security.jwtInitializerTimeout=${ZWE_configs_apiml_security_jwtInitializerTimeout:-5} \
+          -Dapiml.security.x509.enabled=${ZWE_configs_apiml_security_x509_enabled:-false} \
+          -Dapiml.security.x509.externalMapperUrl=${ZWE_configs_apiml_security_x509_externalMapperUrl:-"https://${ZWE_haInstance_hostname:-localhost}:${ZWE_configs_port:-7554}/zss/api/v1/certificate/x509/map"} \
+          -Dapiml.security.x509.externalMapperUser=${ZWE_configs_apiml_security_x509_externalMapperUser:-${ZWE_zowe_setup_security_users_zowe:-ZWESVUSR}} \
+          -Dapiml.security.authorization.provider=${ZWE_configs_apiml_security_authorization_provider:-} \
+          -Dapiml.security.authorization.endpoint.enabled=${ZWE_configs_apiml_security_authorization_endpoint_enabled:-false} \
+          -Dapiml.security.authorization.endpoint.url=${ZWE_configs_apiml_security_authorization_endpoint_url:-"https://${ZWE_haInstance_hostname:-localhost}:${ZWE_configs_port:-7554}/zss/api/v1/saf-auth"} \
+          -Dapiml.security.authorization.resourceClass=${ZWE_configs_apiml_security_authorization_resourceClass:-ZOWE} \
+          -Dapiml.security.authorization.resourceNamePrefix=${ZWE_configs_apiml_security_authorization_resourceNamePrefix:-APIML.} \
+          -Dapiml.security.zosmf.applid=${ZWE_configs_apiml_security_zosmf_applid:-IZUDFLT} \
+          -Djava.protocol.handler.pkgs=com.ibm.crypto.provider \
+          -Dloader.path=${GATEWAY_LOADER_PATH} \
+          -Djava.library.path=${LIBPATH} \
+          -jar ${JAR_FILE}"
 _BPX_JOBNAME=${ZWE_zowe_job_prefix}${GATEWAY_CODE} java \
     -Xms32m -Xmx256m \
     ${QUICK_START} \
