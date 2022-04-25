@@ -112,7 +112,8 @@ public class ServiceAuthenticationFilter extends PreZuulFilter {
         return null;
     }
 
-    private boolean isSourceValidForCommand(AuthSource authSource, AuthenticationCommand cmd) {
+    private boolean isSourceValidForCommand(AuthSource authSource, AuthenticationCommand cmd)
+        throws AuthSchemeException {
         return !cmd.isRequiredValidSource() || authSourceService.isValid(authSource);
     }
 

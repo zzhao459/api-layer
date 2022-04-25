@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.zowe.apiml.auth.Authentication;
 import org.zowe.apiml.gateway.security.service.PassTicketException;
 import org.zowe.apiml.gateway.security.service.saf.SafIdtProvider;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
 import org.zowe.apiml.gateway.security.service.schema.source.JwtAuthSource;
 import org.zowe.apiml.passticket.IRRPassTicketGenerationException;
@@ -65,7 +66,7 @@ class SafIdtSchemeTest {
     }
 
     @Test
-    void testGetAuthSource() {
+    void testGetAuthSource() throws AuthSchemeException {
         doReturn(Optional.empty()).when(authSourceService).getAuthSourceFromRequest();
 
         underTest.getAuthSource();

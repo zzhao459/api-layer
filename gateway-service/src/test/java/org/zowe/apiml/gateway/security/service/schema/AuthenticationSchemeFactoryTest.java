@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.JwtAuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.X509AuthSource;
@@ -169,14 +170,14 @@ class AuthenticationSchemeFactoryTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void whenBypassAuthentication_thenByPassCommandCreate() {
+        void whenBypassAuthentication_thenByPassCommandCreate() throws AuthSchemeException {
             asf.getAuthenticationCommand(authentication);
             verify(byPass, times(1)).createCommand(authentication, JWT_AUTH_SOURCE);
             verify(passTicket, times(0)).createCommand(authentication, X509_AUTH_SOURCE);
         }
 
         @Test
-        void whenHttpPassTicketAuthentication_thenHttpPassTicketCommandCreate() {
+        void whenHttpPassTicketAuthentication_thenHttpPassTicketCommandCreate() throws AuthSchemeException {
             authentication.setScheme(AuthenticationScheme.HTTP_BASIC_PASSTICKET);
 
             asf.getAuthenticationCommand(authentication);
@@ -185,7 +186,7 @@ class AuthenticationSchemeFactoryTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void whenAuthenticationSchemeIsNull_thenByPassTicketCommandCreate() {
+        void whenAuthenticationSchemeIsNull_thenByPassTicketCommandCreate() throws AuthSchemeException {
             authentication.setScheme(null);
 
             asf.getAuthenticationCommand(authentication);
@@ -194,7 +195,7 @@ class AuthenticationSchemeFactoryTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void whenNullAuthentication_thenByPassTicketCommandCreate() {
+        void whenNullAuthentication_thenByPassTicketCommandCreate() throws AuthSchemeException {
             asf.getAuthenticationCommand(null);
             verify(byPass, times(1)).createCommand(null, JWT_AUTH_SOURCE);
             verify(passTicket, times(0)).createCommand(null, X509_AUTH_SOURCE);
@@ -203,7 +204,7 @@ class AuthenticationSchemeFactoryTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void testUnknownScheme(AuthSource authSource) {
+    void testUnknownScheme(AuthSource authSource) throws AuthSchemeException {
         AuthenticationSchemeFactory asf = new AuthenticationSchemeFactory(
             Arrays.asList(
                 createScheme(AuthenticationScheme.BYPASS, true, authSource),

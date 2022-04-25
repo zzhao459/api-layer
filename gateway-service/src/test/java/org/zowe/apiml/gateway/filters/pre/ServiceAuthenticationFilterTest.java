@@ -28,6 +28,7 @@ import org.zowe.apiml.auth.Authentication;
 import org.zowe.apiml.auth.AuthenticationScheme;
 import org.zowe.apiml.gateway.security.service.ServiceAuthenticationServiceImpl;
 import org.zowe.apiml.gateway.security.service.schema.AuthenticationCommand;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
 import org.zowe.apiml.gateway.security.service.schema.source.JwtAuthSource;
@@ -80,7 +81,7 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void testRun(AuthSource authSource) {
+    void testRun(AuthSource authSource) throws AuthSchemeException {
         Authentication authentication = new Authentication(AuthenticationScheme.BYPASS, "");
         when(serviceAuthenticationService.getAuthentication(anyString())).thenReturn(authentication);
         when(serviceAuthenticationService.getAuthSourceByAuthentication(authentication)).thenReturn(Optional.of(authSource));
@@ -123,7 +124,7 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
         }
     }
 
-    private AuthenticationCommand createValidationCommand(AuthSource authSource) {
+    private AuthenticationCommand createValidationCommand(AuthSource authSource) throws AuthSchemeException {
         RequestContext requestContext = mock(RequestContext.class);
         when(requestContext.get(SERVICE_ID_KEY)).thenReturn("service");
         RequestContext.testSetCurrentContext(requestContext);
@@ -140,7 +141,8 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenInvalidAuthSource_whenAuthSourceRequired_thenCallThrought(AuthSource authSource) {
+    void givenInvalidAuthSource_whenAuthSourceRequired_thenCallThrought(AuthSource authSource)
+        throws AuthSchemeException {
         MessageTemplate messageTemplate = new MessageTemplate("key", "number", MessageType.ERROR, "text");
         Message message = Message.of("requestedKey", messageTemplate, new Object[0]);
         doReturn(message).when(messageService).createMessage(anyString(), (Object) any());
@@ -156,7 +158,7 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenValidAuthSource_whenAuthSourceRequired_thenRejected(AuthSource authSource) {
+    void givenValidAuthSource_whenAuthSourceRequired_thenRejected(AuthSource authSource) throws AuthSchemeException {
         AuthenticationCommand cmd = createValidationCommand(authSource);
         doReturn(true).when(authSourceService).isValid(any());
 
@@ -169,7 +171,7 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenValidAuthSource_whenCommandFailed_thenInternalError(AuthSource authSource) {
+    void givenValidAuthSource_whenCommandFailed_thenInternalError(AuthSource authSource) throws AuthSchemeException {
         AuthenticationCommand cmd = createValidationCommand(authSource);
         doThrow(new RuntimeException()).when(cmd).apply(null);
         doReturn(true).when(authSourceService).isValid(any());
@@ -191,7 +193,7 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenExpiredJwt_thenCallThrought(AuthSource authSource) {
+    void givenExpiredJwt_thenCallThrought(AuthSource authSource) throws AuthSchemeException {
         AuthenticationCommand cmd = createValidationCommand(authSource);
         doThrow(new TokenExpireException("Token is expired.")).when(authSourceService).isValid(any());
 
@@ -204,7 +206,8 @@ class ServiceAuthenticationFilterTest extends CleanCurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenInvalidAuthSource_whenAuthenticationException_thenReject(AuthSource authSource) {
+    void givenInvalidAuthSource_whenAuthenticationException_thenReject(AuthSource authSource)
+        throws AuthSchemeException {
         AuthenticationCommand cmd = createValidationCommand(authSource);
         AuthenticationException ae = mock(AuthenticationException.class);
         doThrow(ae).when(authSourceService).isValid(any());

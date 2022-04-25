@@ -31,6 +31,7 @@ import org.zowe.apiml.gateway.security.service.schema.IAuthenticationScheme;
 import org.zowe.apiml.gateway.security.service.schema.AuthenticationCommand;
 import org.zowe.apiml.gateway.security.service.schema.AuthenticationSchemeFactory;
 import org.zowe.apiml.gateway.security.service.schema.ServiceAuthenticationService;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
 import org.zowe.apiml.util.CacheUtils;
@@ -113,7 +114,8 @@ public class ServiceAuthenticationServiceImpl implements ServiceAuthenticationSe
     @Override
     @CacheEvict(value = CACHE_BY_AUTHENTICATION, condition = "#result != null && #result.isExpired()")
     @Cacheable(CACHE_BY_AUTHENTICATION)
-    public AuthenticationCommand getAuthenticationCommand(Authentication authentication, AuthSource authSource) {
+    public AuthenticationCommand getAuthenticationCommand(Authentication authentication, AuthSource authSource)
+        throws AuthSchemeException {
         final IAuthenticationScheme scheme = authenticationSchemeFactory.getSchema(authentication.getScheme());
         return scheme.createCommand(authentication, authSource);
     }
@@ -126,7 +128,8 @@ public class ServiceAuthenticationServiceImpl implements ServiceAuthenticationSe
             keyGenerator = CacheConfig.COMPOSITE_KEY_GENERATOR
     )
     @Cacheable(value = CACHE_BY_SERVICE_ID, keyGenerator = CacheConfig.COMPOSITE_KEY_GENERATOR)
-    public AuthenticationCommand getAuthenticationCommand(String serviceId, Authentication found, AuthSource authSource) {
+    public AuthenticationCommand getAuthenticationCommand(String serviceId, Authentication found, AuthSource authSource)
+        throws AuthSchemeException {
         // Authentication cannot be determined before load balancer
         if (found instanceof LoadBalancerAuthentication) return loadBalancerCommand;
         // if no instance exist or no metadata found, do nothing
@@ -135,7 +138,8 @@ public class ServiceAuthenticationServiceImpl implements ServiceAuthenticationSe
         return getAuthenticationCommand(found, authSource);
     }
 
-    public Optional<AuthSource> getAuthSourceByAuthentication(Authentication authentication) {
+    public Optional<AuthSource> getAuthSourceByAuthentication(Authentication authentication)
+        throws AuthSchemeException {
         if (authentication == null || authentication.isEmpty() || authentication instanceof LoadBalancerAuthentication) {
             return Optional.empty();
         }
@@ -187,7 +191,7 @@ public class ServiceAuthenticationServiceImpl implements ServiceAuthenticationSe
                     rejected = (!authSource.isPresent()) || !authSourceService.isValid(authSource.get());
                 }
 
-            } catch (AuthenticationException ae) {
+            } catch (AuthenticationException | AuthSchemeException ae) {
                 rejected = true;
             }
 

@@ -78,7 +78,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
     @Nested
     class AuthSourceIndependentTests {
         @Test
-        void testGetAuthSource() {
+        void testGetAuthSource() throws AuthSchemeException {
             doReturn(Optional.empty()).when(authSourceService).getAuthSourceFromRequest();
 
             httpBasicPassTicketScheme.getAuthSource();
@@ -91,7 +91,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void testIsRequiredValidJwt() {
+        void testIsRequiredValidJwt() throws AuthSchemeException {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, 1);
             AuthSource.Parsed parsedSource = new JwtAuthSource.Parsed("username", calendar.getTime(), calendar.getTime(), AuthSource.Origin.ZOWE);
@@ -127,7 +127,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
     }
 
     @Test
-    void testCreateCommand() {
+    void testCreateCommand() throws AuthSchemeException {
         Calendar calendar = Calendar.getInstance();
         AuthSource.Parsed parsedSource = new JwtAuthSource.Parsed(USERNAME, calendar.getTime(), calendar.getTime(), AuthSource.Origin.ZOWE);
         when(authSourceService.parse(jwtAuthSource)).thenReturn(parsedSource);
@@ -153,7 +153,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         AuthenticationCommand ac;
 
         @Test
-        void whenJwtExpired_thenCommandExpired() {
+        void whenJwtExpired_thenCommandExpired() throws AuthSchemeException {
             // JWT token expired one minute ago (command expired also if JWT token expired)
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MINUTE, -1);
@@ -164,7 +164,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void whenJwtExpireSoon_thenCommandInNotExpiredYet() {
+        void whenJwtExpireSoon_thenCommandInNotExpiredYet() throws AuthSchemeException {
             // JWT token will expire in one minute (command expired also if JWT token expired)
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MINUTE, 2);
@@ -175,7 +175,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void testPassticketTimeout() {
+        void testPassticketTimeout() throws AuthSchemeException {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MINUTE, 100);
             AuthSource.Parsed parsedSource4 = new JwtAuthSource.Parsed(USERNAME, calendar.getTime(), calendar.getTime(), AuthSource.Origin.ZOWE);
@@ -192,7 +192,8 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
     @Nested
     class GivenZoweJwtAuthSource {
         @Test
-        void givenRequest_whenApplyToRequest_thenSetsAuthorizationBasic() throws IRRPassTicketGenerationException {
+        void givenRequest_whenApplyToRequest_thenSetsAuthorizationBasic()
+            throws IRRPassTicketGenerationException, AuthSchemeException {
             Calendar calendar = Calendar.getInstance();
             AuthSource.Parsed parsedSource = new JwtAuthSource.Parsed(USERNAME, calendar.getTime(), calendar.getTime(), AuthSource.Origin.ZOWE);
             when(authSourceService.parse(jwtAuthSource)).thenReturn(parsedSource);
@@ -220,7 +221,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void givenJwtInCookie_whenApply_thenJwtIsRemoved() {
+        void givenJwtInCookie_whenApply_thenJwtIsRemoved() throws AuthSchemeException {
             AuthenticationCommand command = getPassTicketCommand();
             RequestContext requestContext = new RequestContext();
             HttpServletRequest request = new MockHttpServletRequest();
@@ -256,7 +257,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void givenNoCookie_whenApplyToRequest_thenNoCookies() {
+        void givenNoCookie_whenApplyToRequest_thenNoCookies() throws AuthSchemeException {
             AuthenticationCommand command = getPassTicketCommand();
             HttpRequest httpRequest = new HttpGet();
 
@@ -266,7 +267,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
 
         @Test
-        void givenJwtInCookie_whenApplyToRequest_thenJwtIsRemoved() {
+        void givenJwtInCookie_whenApplyToRequest_thenJwtIsRemoved() throws AuthSchemeException {
             AuthenticationCommand command = getPassTicketCommand();
             HttpRequest httpRequest = new HttpGet();
             httpRequest.setHeader("cookie",
@@ -283,7 +284,7 @@ class HttpBasicPassTicketSchemeTest extends CleanCurrentRequestContextTest {
         }
     }
 
-    private HttpBasicPassTicketScheme.PassTicketCommand getPassTicketCommand() {
+    private HttpBasicPassTicketScheme.PassTicketCommand getPassTicketCommand() throws AuthSchemeException {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.YEAR, 1);
 

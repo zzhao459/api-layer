@@ -37,7 +37,7 @@ public class X509CNAuthSourceService extends X509AuthSourceService {
      * @return Optional<AuthSource> with client certificate of Optional.empty()
      */
     @Override
-    public Optional<AuthSource> getAuthSourceFromRequest() {
+    public Optional<AuthSource> getAuthSourceFromRequest() throws AuthSchemeException {
         final RequestContext context = RequestContext.getCurrentContext();
 
         // get certificate from custom attribute "client.auth.X509Certificate"

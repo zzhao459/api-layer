@@ -51,7 +51,8 @@ public class ZosmfScheme implements IAuthenticationScheme {
     }
 
     @Override
-    public AuthenticationCommand createCommand(Authentication authentication, AuthSource authSource) {
+    public AuthenticationCommand createCommand(Authentication authentication, AuthSource authSource)
+        throws AuthSchemeException {
         if (!LoginProvider.ZOSMF.getValue().equals(authProvider)) {
             throw new AuthSchemeException("org.zowe.apiml.gateway.security.scheme.zosmfSchemeNotSupported");
         }
@@ -93,7 +94,7 @@ public class ZosmfScheme implements IAuthenticationScheme {
     }
 
     @Override
-    public Optional<AuthSource> getAuthSource() {
+    public Optional<AuthSource> getAuthSource() throws AuthSchemeException {
         return authSourceService.getAuthSourceFromRequest();
     }
 

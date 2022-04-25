@@ -64,7 +64,7 @@ public class DefaultAuthSourceService implements AuthSourceService {
      * or Optional.empty() when no authentication source found.
      */
     @Override
-    public Optional<AuthSource> getAuthSourceFromRequest() {
+    public Optional<AuthSource> getAuthSourceFromRequest() throws AuthSchemeException {
         AuthSourceService service = getService(AuthSourceType.JWT);
         Optional<AuthSource> authSource = service.getAuthSourceFromRequest();
         if (!authSource.isPresent()) {
@@ -81,7 +81,7 @@ public class DefaultAuthSourceService implements AuthSourceService {
      * @return true is authentication source is valid, false otherwise
      */
     @Override
-    public boolean isValid(AuthSource authSource) {
+    public boolean isValid(AuthSource authSource) throws AuthSchemeException {
         AuthSourceService service = getService(authSource);
         return service != null && service.isValid(authSource);
     }
@@ -105,7 +105,7 @@ public class DefaultAuthSourceService implements AuthSourceService {
      * @return LPTA token
      */
     @Override
-    public String getLtpaToken(AuthSource authSource) {
+    public String getLtpaToken(AuthSource authSource) throws AuthSchemeException {
         AuthSourceService service = getService(authSource);
         return service != null ? service.getLtpaToken(authSource) : null;
     }
@@ -135,7 +135,7 @@ public class DefaultAuthSourceService implements AuthSourceService {
     }
 
     @Override
-    public String getJWT(AuthSource authSource) {
+    public String getJWT(AuthSource authSource) throws AuthSchemeException {
         AuthSourceService service = getService(authSource);
         return service != null ? service.getJWT(authSource) : null;
     }

@@ -55,7 +55,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
         private final Parsed expectedParsedSource = new JwtAuthSource.Parsed("user", new Date(111), new Date(222), Origin.ZOSMF);
 
         @Test
-        void thenJwtAuthSourceIsPresent() {
+        void thenJwtAuthSourceIsPresent() throws AuthSchemeException {
             when(jwtAuthSourceService.getAuthSourceFromRequest()).thenReturn(Optional.of(jwtAuthSource));
 
             Optional<AuthSource> authSource = serviceUnderTest.getAuthSourceFromRequest();
@@ -69,7 +69,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
         }
 
         @Test
-        void thenAuthSourceIsValid() {
+        void thenAuthSourceIsValid() throws AuthSchemeException {
             when(jwtAuthSourceService.isValid(any())).thenReturn(true);
 
             assertTrue(serviceUnderTest.isValid(jwtAuthSource));
@@ -88,7 +88,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
         }
 
         @Test
-        void thenLtpaTokenGenerated() {
+        void thenLtpaTokenGenerated() throws AuthSchemeException {
             when(jwtAuthSourceService.getLtpaToken(any())).thenReturn("ltpa");
 
             Assertions.assertNotNull(serviceUnderTest.getLtpaToken(jwtAuthSource));
@@ -110,7 +110,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
         }
 
         @Test
-        void thenX509AuthSourceIsPresent() {
+        void thenX509AuthSourceIsPresent() throws AuthSchemeException {
             when(x509MFAuthSourceService.getAuthSourceFromRequest()).thenReturn(Optional.of(x509AuthSource));
 
             Optional<AuthSource> authSource = serviceUnderTest.getAuthSourceFromRequest();
@@ -124,7 +124,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
         }
 
         @Test
-        void thenAuthSourceIsValid() {
+        void thenAuthSourceIsValid() throws AuthSchemeException {
             when(x509MFAuthSourceService.isValid(any(AuthSource.class))).thenReturn(true);
 
             assertTrue(serviceUnderTest.isValid(x509AuthSource));
@@ -149,7 +149,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
         private final JwtAuthSource jwtAuthSource = new JwtAuthSource("token");
 
         @Test
-        void thenJwtAuthSourceIsPresent() {
+        void thenJwtAuthSourceIsPresent() throws AuthSchemeException {
             when(jwtAuthSourceService.getAuthSourceFromRequest()).thenReturn(Optional.of(jwtAuthSource));
 
             Optional<AuthSource> authSource = serviceUnderTest.getAuthSourceFromRequest();
@@ -167,7 +167,7 @@ public class DefaultAuthSourceServiceTest extends CleanCurrentRequestContextTest
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class WhenNoAuthenticationInRequest {
         @Test
-        void thenX509AuthSourceIsPresent() {
+        void thenX509AuthSourceIsPresent() throws AuthSchemeException {
             when(jwtAuthSourceService.getAuthSourceFromRequest()).thenReturn(Optional.empty());
             when(x509MFAuthSourceService.getAuthSourceFromRequest()).thenReturn(Optional.empty());
 

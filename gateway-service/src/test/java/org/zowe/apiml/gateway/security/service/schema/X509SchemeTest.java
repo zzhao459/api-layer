@@ -78,13 +78,13 @@ class X509SchemeTest {
     class WhenCertificateInRequest {
 
         @BeforeEach
-        void init() {
+        void init() throws AuthSchemeException {
             doReturn(true).when(authSourceService).isValid(any(AuthSource.class));
             doReturn(parsedSource).when(authSourceService).parse(any(X509AuthSource.class));
         }
 
         @Test
-        void testGetAuthSource() {
+        void testGetAuthSource() throws AuthSchemeException {
             doReturn(Optional.empty()).when(authSourceService).getAuthSourceFromRequest();
 
             x509Scheme.getAuthSource();
@@ -92,7 +92,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenPublicCertificateIsRequested_onlyCorrectHeaderIsSet() {
+        void whenPublicCertificateIsRequested_onlyCorrectHeaderIsSet() throws AuthSchemeException {
             authentication =
                 new Authentication(AuthenticationScheme.X509, null, PUBLIC_KEY);
             X509Scheme.X509Command command = (X509Scheme.X509Command) x509Scheme.createCommand(authentication, authSource);
@@ -103,7 +103,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenAllHeadersAreRequested_allHeadersAreSet() {
+        void whenAllHeadersAreRequested_allHeadersAreSet() throws AuthSchemeException {
             authentication =
                 new Authentication(AuthenticationScheme.X509, null, PUBLIC_KEY + "," + DISTINGUISHED_NAME + "," + COMMON_NAME);
             X509Scheme.X509Command command = (X509Scheme.X509Command) x509Scheme.createCommand(authentication, authSource);
@@ -115,7 +115,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void certificatePassOnIsSetAfterApply() {
+        void certificatePassOnIsSetAfterApply() throws AuthSchemeException {
             authentication = new Authentication(AuthenticationScheme.X509, null, PUBLIC_KEY);
             X509Scheme.X509Command command = (X509Scheme.X509Command) x509Scheme.createCommand(authentication, authSource);
             command.apply(null);
@@ -123,7 +123,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenAuthenticationHeadersMissing_thenSendAllHeaders() {
+        void whenAuthenticationHeadersMissing_thenSendAllHeaders() throws AuthSchemeException {
             X509Scheme.X509Command command = (X509Scheme.X509Command) x509Scheme.createCommand(authentication, authSource);
             command.apply(null);
             verify(context, times(1)).addZuulRequestHeader(PUBLIC_KEY, parsedSource.getPublicKey());
@@ -132,7 +132,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenUnknownAuthenticationHeader_thenNoHeaderIsSet() {
+        void whenUnknownAuthenticationHeader_thenNoHeaderIsSet() throws AuthSchemeException {
             authentication =
                 new Authentication(AuthenticationScheme.X509, null, "Unknown");
             X509Scheme.X509Command command = (X509Scheme.X509Command) x509Scheme.createCommand(authentication, authSource);
@@ -141,7 +141,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenCertWithShortExpiration_thenUseCertExpiration() {
+        void whenCertWithShortExpiration_thenUseCertExpiration() throws AuthSchemeException {
             long expectedExpiration = Instant.now().getEpochSecond() + (5 * 60 * 1000);
             parsedSource = new Parsed("commonName", new Date(), new Date(expectedExpiration), Origin.X509, "", "distName");
             doReturn(parsedSource).when(authSourceService).parse(any(AuthSource.class));
@@ -153,7 +153,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenCertWithLongExpiration_thenUseDefaultExpiration() {
+        void whenCertWithLongExpiration_thenUseDefaultExpiration() throws AuthSchemeException {
             long expectedExpiration = Instant.MAX.getEpochSecond();
             parsedSource = new Parsed("commonName", new Date(), new Date(expectedExpiration), Origin.X509, "", "distName");
             doReturn(parsedSource).when(authSourceService).parse(any(AuthSource.class));
@@ -166,7 +166,7 @@ class X509SchemeTest {
         }
 
         @Test
-        void whenCannotGetExpirationFromCert_thenUseDefaultExpiration() {
+        void whenCannotGetExpirationFromCert_thenUseDefaultExpiration() throws AuthSchemeException {
             parsedSource = new Parsed("commonName", new Date(), null, Origin.X509, "", "distName");
             doReturn(parsedSource).when(authSourceService).parse(any(AuthSource.class));
             X509Scheme.X509Command command = (X509Scheme.X509Command) x509Scheme.createCommand(authentication, authSource);

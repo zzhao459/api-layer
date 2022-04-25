@@ -44,6 +44,7 @@ import org.zowe.apiml.gateway.cache.RetryIfExpiredAspect;
 import org.zowe.apiml.gateway.config.CacheConfig;
 import org.zowe.apiml.gateway.security.service.ServiceAuthenticationServiceImpl.LoadBalancerAuthentication;
 import org.zowe.apiml.gateway.security.service.schema.*;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource.Origin;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
@@ -298,7 +299,8 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources2Pairs")
-    void testGetAuthenticationCommand(List<ImmutablePair<AuthSource, AuthSource.Parsed>> authSourcePairs) {
+    void testGetAuthenticationCommand(List<ImmutablePair<AuthSource, AuthSource.Parsed>> authSourcePairs)
+        throws AuthSchemeException {
         AuthSource authSource1 = authSourcePairs.get(0).left;
         AuthSource authSource2 = authSourcePairs.get(1).left;
         AuthSource.Parsed parsedAuthSource1 = authSourcePairs.get(0).right;
@@ -331,7 +333,7 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
     }
 
     @Test
-    void testGetAuthenticationCommand_whenNoAuthSource() {
+    void testGetAuthenticationCommand_whenNoAuthSource() throws AuthSchemeException {
         IAuthenticationScheme schemeBeanMock = mock(IAuthenticationScheme.class);
         when(authenticationSchemeFactory.getSchema(AuthenticationScheme.HTTP_BASIC_PASSTICKET))
             .thenReturn(schemeBeanMock);
@@ -347,7 +349,7 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSourcesList")
-    void testGetAuthenticationCommandByServiceId(List<AuthSource> authSourceTriplet) {
+    void testGetAuthenticationCommandByServiceId(List<AuthSource> authSourceTriplet) throws AuthSchemeException {
         AuthSource authSource = authSourceTriplet.get(0);
         AuthenticationCommand ok = new AuthenticationCommandTest(false);
         Authentication a1 = new Authentication(AuthenticationScheme.HTTP_BASIC_PASSTICKET, "applid01");
@@ -375,7 +377,7 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void testGetAuthenticationCommandByServiceIdCache(AuthSource authSource) {
+    void testGetAuthenticationCommandByServiceIdCache(AuthSource authSource) throws AuthSchemeException {
         AuthenticationCommand ac1 = new AuthenticationCommandTest(true);
         AuthenticationCommand ac2 = new AuthenticationCommandTest(false);
         IAuthenticationScheme schemeBeanMock = mock(IAuthenticationScheme.class);
@@ -402,7 +404,7 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void testUniversalAuthenticationCommand(AuthSource authSource) {
+    void testUniversalAuthenticationCommand(AuthSource authSource) throws AuthSchemeException {
         ServiceAuthenticationServiceImpl.UniversalAuthenticationCommand uac = serviceAuthenticationServiceImpl.new UniversalAuthenticationCommand();
         assertFalse(uac.isExpired());
 
@@ -445,7 +447,7 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSourcesList")
-    void testEvictCacheService(List<AuthSource> authSourceList) {
+    void testEvictCacheService(List<AuthSource> authSourceList) throws AuthSchemeException {
         AuthSource authSource1 = authSourceList.get(0);
         AuthSource authSource2 = authSourceList.get(1);
         AuthenticationCommand command = AuthenticationCommand.EMPTY;
@@ -494,7 +496,7 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void testNoApplication(AuthSource authSource) {
+    void testNoApplication(AuthSource authSource) throws AuthSchemeException {
         when(discoveryClient.getApplication(any())).thenReturn(null);
         assertSame(AuthenticationCommand.EMPTY, serviceAuthenticationServiceImpl.getAuthenticationCommand("unknown", null, authSource));
     }
@@ -593,7 +595,8 @@ class ServiceAuthenticationServiceImplTest extends CurrentRequestContextTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenServiceIdAndAuthSource_whenExpiringCommand_thenReturnNewOne(AuthSource authSource) {
+    void givenServiceIdAndAuthSource_whenExpiringCommand_thenReturnNewOne(AuthSource authSource)
+        throws AuthSchemeException {
         IAuthenticationScheme scheme = mock(IAuthenticationScheme.class);
         Application application = createApplication(
             createInstanceInfo("instanceId", AuthenticationScheme.HTTP_BASIC_PASSTICKET, "applid")

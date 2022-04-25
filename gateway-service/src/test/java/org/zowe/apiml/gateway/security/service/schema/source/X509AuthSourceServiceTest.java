@@ -95,7 +95,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
         @Nested
         class GivenNullAuthSource {
             @Test
-            void whenNoClientCertInRequest_thenThrows() {
+            void whenNoClientCertInRequest_thenThrows() throws AuthSchemeException {
                 context = spy(RequestContext.class);
                 request = mock(HttpServletRequest.class);
                 RequestContext.testSetCurrentContext(context);
@@ -106,7 +106,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
             }
 
             @Test
-            void whenValidate_thenFalse() {
+            void whenValidate_thenFalse() throws AuthSchemeException {
                 AuthSource authSource = null;
                 assertFalse(serviceUnderTest.isValid(authSource));
                 verifyNoInteractions(mapper);
@@ -119,7 +119,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
             }
 
             @Test
-            void whenGetLTPA_thenNull() {
+            void whenGetLTPA_thenNull() throws AuthSchemeException {
                 assertNull(serviceUnderTest.getLtpaToken(null));
             }
         }
@@ -127,7 +127,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
         @Nested
         class GiveNullRawSource {
             @Test
-            void whenValidate_thenFalse() {
+            void whenValidate_thenFalse() throws AuthSchemeException {
                 assertFalse(serviceUnderTest.isValid(new X509AuthSource(null)));
             }
 
@@ -147,7 +147,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
             }
 
             @Test
-            void whenClientCertInRequest_thenAuthSourceIsPresent() {
+            void whenClientCertInRequest_thenAuthSourceIsPresent() throws AuthSchemeException {
                 x509Certificates[0] = x509Certificate;
                 context = spy(RequestContext.class);
                 request = mock(HttpServletRequest.class);
@@ -167,7 +167,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
             }
 
             @Test
-            void whenValidate_thenCorrect() {
+            void whenValidate_thenCorrect() throws AuthSchemeException {
                 when(mapper.isClientAuthCertificate(x509Certificate)).thenReturn(true);
                 Assertions.assertTrue(serviceUnderTest.isValid(new X509AuthSource(x509Certificate)));
                 verify(mapper, times(1)).isClientAuthCertificate(x509Certificate);
@@ -216,7 +216,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
             }
 
             @Test
-            void whenInternalApimlCertInRequestInStandardAttribute_thenThrows() {
+            void whenInternalApimlCertInRequestInStandardAttribute_thenThrows() throws AuthSchemeException {
                 when(context.getRequest()).thenReturn(request);
                 doReturn(new X509Certificate[0]).when(request).getAttribute("client.auth.X509Certificate");
 
@@ -227,7 +227,7 @@ class X509AuthSourceServiceTest extends CleanCurrentRequestContextTest {
             }
 
             @Test
-            void whenIncorrectAuthSourceType_thenIsValidFalse() {
+            void whenIncorrectAuthSourceType_thenIsValidFalse() throws AuthSchemeException {
                 assertFalse(serviceUnderTest.isValid(new JwtAuthSource("")));
             }
 

@@ -25,6 +25,7 @@ import org.zowe.apiml.gateway.security.service.ServiceAuthenticationServiceImpl;
 import org.zowe.apiml.gateway.security.service.schema.AuthenticationCommand;
 import org.zowe.apiml.gateway.security.service.schema.ServiceAuthenticationService;
 import org.zowe.apiml.auth.Authentication;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
 import org.zowe.apiml.gateway.security.service.schema.source.JwtAuthSource;
@@ -55,7 +56,7 @@ class ServiceAuthenticationDecoratorTest {
     }
 
     @Test
-    void givenContextWithoutCommand_whenProcess_thenNoAction() {
+    void givenContextWithoutCommand_whenProcess_thenNoAction() throws AuthSchemeException {
         HttpRequest request = new HttpGet("/");
 
         decorator.process(request);
@@ -66,7 +67,7 @@ class ServiceAuthenticationDecoratorTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenContextWithAnyOtherCommand_whenProcess_thenNoAction(AuthSource authSource) {
+    void givenContextWithAnyOtherCommand_whenProcess_thenNoAction(AuthSource authSource) throws AuthSchemeException {
         HttpRequest request = new HttpGet("/");
         AuthenticationCommand cmd = mock(ServiceAuthenticationServiceImpl.LoadBalancerAuthenticationCommand.class);
         prepareContext(cmd, authSource);
@@ -79,7 +80,8 @@ class ServiceAuthenticationDecoratorTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenContextWithCorrectKey_whenProcess_thenShouldRetrieveCommand(AuthSource authSource) {
+    void givenContextWithCorrectKey_whenProcess_thenShouldRetrieveCommand(AuthSource authSource)
+        throws AuthSchemeException {
         AuthenticationCommand universalCmd = mock(ServiceAuthenticationServiceImpl.UniversalAuthenticationCommand.class);
         prepareContext(universalCmd, authSource);
         doReturn(true).when(authSourceService).isValid(any());
@@ -101,7 +103,8 @@ class ServiceAuthenticationDecoratorTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenContextWithCorrectKeyAndJWT_whenJwtNotAuthenticated_thenShouldAbort(AuthSource authSource) {
+    void givenContextWithCorrectKeyAndJWT_whenJwtNotAuthenticated_thenShouldAbort(AuthSource authSource)
+        throws AuthSchemeException {
         AuthenticationCommand universalCmd = mock(ServiceAuthenticationServiceImpl.UniversalAuthenticationCommand.class);
         prepareContext(universalCmd, authSource);
         when(authSourceService.isValid(any())).thenReturn(false);
@@ -114,7 +117,8 @@ class ServiceAuthenticationDecoratorTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenContextWithCorrectKeyAndJWT_whenAuthenticationThrows_thenShouldAbort(AuthSource authSource) {
+    void givenContextWithCorrectKeyAndJWT_whenAuthenticationThrows_thenShouldAbort(AuthSource authSource)
+        throws AuthSchemeException {
         AuthenticationCommand universalCmd = mock(ServiceAuthenticationServiceImpl.UniversalAuthenticationCommand.class);
         prepareContext(universalCmd, authSource);
         AuthenticationException ae = mock(AuthenticationException.class);
@@ -128,7 +132,8 @@ class ServiceAuthenticationDecoratorTest {
 
     @ParameterizedTest
     @MethodSource("provideAuthSources")
-    void givenWrongContext_whenProcess_thenReturnWhenCmdIsNull(AuthSource authSource) throws RequestAbortException {
+    void givenWrongContext_whenProcess_thenReturnWhenCmdIsNull(AuthSource authSource)
+        throws RequestAbortException, AuthSchemeException {
         AuthenticationCommand universalCmd = mock(ServiceAuthenticationServiceImpl.UniversalAuthenticationCommand.class);
         prepareWrongContextForCmdNull(universalCmd, authSource);
 
@@ -138,7 +143,7 @@ class ServiceAuthenticationDecoratorTest {
         verify(universalCmd, times(0)).applyToRequest(request);
     }
 
-    private void prepareContext(AuthenticationCommand command, AuthSource authSource) {
+    private void prepareContext(AuthenticationCommand command, AuthSource authSource) throws AuthSchemeException {
         RequestContext.getCurrentContext().set(AUTHENTICATION_COMMAND_KEY, command);
         RequestContext.getCurrentContext().set(LOADBALANCED_INSTANCE_INFO_KEY, info);
         doReturn(Optional.of(authSource)).when(serviceAuthenticationService).getAuthSourceByAuthentication(any());
@@ -149,7 +154,8 @@ class ServiceAuthenticationDecoratorTest {
         doReturn(true).when(command).isRequiredValidSource();
     }
 
-    private void prepareWrongContextForCmdNull(AuthenticationCommand command, AuthSource authSource) {
+    private void prepareWrongContextForCmdNull(AuthenticationCommand command, AuthSource authSource)
+        throws AuthSchemeException {
         RequestContext.getCurrentContext().set(AUTHENTICATION_COMMAND_KEY, command);
         RequestContext.getCurrentContext().set(LOADBALANCED_INSTANCE_INFO_KEY, info);
         doReturn(Optional.of(authSource)).when(authSourceService).getAuthSourceFromRequest();

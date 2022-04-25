@@ -46,7 +46,7 @@ public class X509AuthSourceService implements AuthSourceService {
      * @return Optional<AuthSource> with client certificate of Optional.empty()
      */
     @Override
-    public Optional<AuthSource> getAuthSourceFromRequest() {
+    public Optional<AuthSource> getAuthSourceFromRequest() throws AuthSchemeException {
         final RequestContext context = RequestContext.getCurrentContext();
         X509Certificate clientCert = getCertificateFromRequest(context.getRequest(), "client.auth.X509Certificate");
         clientCert = isValid(clientCert) ? clientCert : null;
@@ -60,7 +60,7 @@ public class X509AuthSourceService implements AuthSourceService {
      * @param authSource {@link AuthSource} object which hold original source of authentication - client certificate.
      * @return true if client certificate is valid, false otherwise.
      */
-    public boolean isValid(AuthSource authSource) {
+    public boolean isValid(AuthSource authSource) throws AuthSchemeException {
         if (authSource instanceof X509AuthSource) {
             X509Certificate clientCert = (X509Certificate) authSource.getRawSource();
             return isValid(clientCert);
@@ -74,7 +74,7 @@ public class X509AuthSourceService implements AuthSourceService {
      * @param clientCert {@link X509Certificate} X509 client certificate.
      * @return true if client certificate is valid, false otherwise.
      */
-    protected boolean isValid(X509Certificate clientCert) {
+    protected boolean isValid(X509Certificate clientCert) throws AuthSchemeException {
         if (clientCert == null) {
             return false;
         }
@@ -101,7 +101,7 @@ public class X509AuthSourceService implements AuthSourceService {
     }
 
     @Override
-    public String getLtpaToken(AuthSource authSource) {
+    public String getLtpaToken(AuthSource authSource) throws AuthSchemeException {
         String jwt = getJWT(authSource);
         return jwt != null ? authenticationService.getLtpaToken(jwt) : null;
     }
@@ -139,7 +139,7 @@ public class X509AuthSourceService implements AuthSourceService {
     }
 
     @Override
-    public String getJWT(AuthSource authSource) {
+    public String getJWT(AuthSource authSource) throws AuthSchemeException {
         if (authSource instanceof X509AuthSource) {
             String userId = mapper.mapCertificateToMainframeUserId((X509Certificate) authSource.getRawSource());
             if (userId == null) {

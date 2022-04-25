@@ -48,7 +48,7 @@ class ZoweJwtSchemeTest {
     AuthenticationCommand command;
 
     @BeforeEach
-    void setup() {
+    void setup() throws AuthSchemeException {
         requestContext = spy(new RequestContext());
         RequestContext.testSetCurrentContext(requestContext);
 
@@ -67,7 +67,7 @@ class ZoweJwtSchemeTest {
     @Nested
     class AuthSourceIndependentTests {
         @Test
-        void testGetAuthSource() {
+        void testGetAuthSource() throws AuthSchemeException {
             doReturn(Optional.empty()).when(authSourceService).getAuthSourceFromRequest();
 
             scheme.getAuthSource();
@@ -82,7 +82,7 @@ class ZoweJwtSchemeTest {
         }
 
         @Test
-        void whenCannotGetExpiration_thenUseDefaultExpiration() {
+        void whenCannotGetExpiration_thenUseDefaultExpiration() throws AuthSchemeException {
             AuthSource.Parsed parsedSource = new X509AuthSource.Parsed("commonName", new Date(), null, Origin.X509, "", "distName");
             doReturn(parsedSource).when(authSourceService).parse(any(AuthSource.class));
             command = scheme.createCommand(null, new JwtAuthSource("jwtToken"));
@@ -98,7 +98,7 @@ class ZoweJwtSchemeTest {
         AuthenticationCommand command;
 
         @Test
-        void whenValidJWTAuthSource_thenUpdateZuulHeaderWithJWToken() {
+        void whenValidJWTAuthSource_thenUpdateZuulHeaderWithJWToken() throws AuthSchemeException {
             when(authSourceService.parse(authSource)).thenReturn(new JwtAuthSource.Parsed("user", new Date(), new Date(), Origin.ZOSMF));
             command = scheme.createCommand(null, authSource);
             command.apply(null);
@@ -121,7 +121,7 @@ class ZoweJwtSchemeTest {
         }
 
         @Test
-        void whenValidJWTAuthSource_thenUpdateCookieWithJWToken() {
+        void whenValidJWTAuthSource_thenUpdateCookieWithJWToken() throws AuthSchemeException {
             when(authSourceService.parse(authSource)).thenReturn(new JwtAuthSource.Parsed("user", new Date(), new Date(), Origin.ZOSMF));
             HttpRequest httpRequest = new HttpGet("api/v1/files");
             httpRequest.setHeader(new BasicHeader("authorization", "basic=aha"));
@@ -131,7 +131,7 @@ class ZoweJwtSchemeTest {
         }
 
         @Test
-        void whenValidJWTAuthSource_thenCommandIsNotExpired() {
+        void whenValidJWTAuthSource_thenCommandIsNotExpired() throws AuthSchemeException {
             long expectedExpiration = System.currentTimeMillis() + (5 * 60 * 1000);
             when(authSourceService.parse(any(JwtAuthSource.class))).thenReturn(new Parsed("userId", new Date(), new Date(expectedExpiration), Origin.ZOWE));
 
@@ -144,7 +144,7 @@ class ZoweJwtSchemeTest {
         }
 
         @Test
-        void whenExpiredJWTAuthSource_thenCommandIsExpired() {
+        void whenExpiredJWTAuthSource_thenCommandIsExpired() throws AuthSchemeException {
             long expectedExpiration = System.currentTimeMillis() - (5 * 60 * 1000);
             when(authSourceService.parse(any(JwtAuthSource.class))).thenReturn(new Parsed("userId", new Date(), new Date(expectedExpiration), Origin.ZOWE));
 
@@ -165,7 +165,7 @@ class ZoweJwtSchemeTest {
         ZoweJwtScheme scheme;
 
         @BeforeEach
-        void setup() {
+        void setup() throws AuthSchemeException {
             X509Certificate cert = mock(X509Certificate.class);
             authSource = new X509AuthSource(cert);
             when(authSourceService.getAuthSourceFromRequest()).thenReturn(Optional.of(authSource));
@@ -177,7 +177,7 @@ class ZoweJwtSchemeTest {
         @Nested
         class WhenCertificateInRequest {
             @Test
-            void whenValid_thenUpdateZuulHeaderWithJWToken() {
+            void whenValid_thenUpdateZuulHeaderWithJWToken() throws AuthSchemeException {
                 when(authSourceService.parse(authSource)).thenReturn(new X509AuthSource.Parsed("user", new Date(), new Date(), Origin.ZOSMF, "public key", "distinguishedName"));
                 command = scheme.createCommand(null, authSource);
                 command.apply(null);
@@ -186,7 +186,7 @@ class ZoweJwtSchemeTest {
             }
 
             @Test
-            void whenValid_thenUpdateCookiesWithJWToken() {
+            void whenValid_thenUpdateCookiesWithJWToken() throws AuthSchemeException {
                 when(authSourceService.parse(authSource)).thenReturn(new X509AuthSource.Parsed("user", new Date(), new Date(), Origin.ZOSMF, "public key", "distinguishedName"));
                 command = scheme.createCommand(null, authSource);
                 HttpRequest httpRequest = new HttpGet("api/v1/files");
@@ -196,7 +196,7 @@ class ZoweJwtSchemeTest {
             }
 
             @Test
-            void whenJwtCannotBeCreatedFromX509_thenThrows() {
+            void whenJwtCannotBeCreatedFromX509_thenThrows() throws AuthSchemeException {
                 X509Certificate cert = mock(X509Certificate.class);
                 AuthSource certSource = new X509AuthSource(cert);
                 when(authSourceService.parse(certSource)).thenReturn(new X509AuthSource.Parsed("user", null, null, null, null, null));
@@ -205,13 +205,13 @@ class ZoweJwtSchemeTest {
             }
 
             @Test
-            void whenNoJWTReturned_thenThrows() {
+            void whenNoJWTReturned_thenThrows() throws AuthSchemeException {
                 when(authSourceService.getJWT(authSource)).thenReturn(null);
                 assertThrows(AuthSchemeException.class, () -> scheme.createCommand(null, null));
             }
 
             @Test
-            void whenValidX509AuthSource_thenCommandIsNotExpired() {
+            void whenValidX509AuthSource_thenCommandIsNotExpired() throws AuthSchemeException {
                 long expectedExpiration = System.currentTimeMillis() + (5L * 60 * 1000);
                 when(authSourceService.parse(any(X509AuthSource.class))).thenReturn(new Parsed("userId", new Date(), new Date(expectedExpiration), Origin.ZOWE));
 
@@ -235,7 +235,7 @@ class ZoweJwtSchemeTest {
         @Nested
         class IncorrectCertificateInRequest {
             @Test
-            void whenExpiredX509AuthSource_thenCommandIsExpired() {
+            void whenExpiredX509AuthSource_thenCommandIsExpired() throws AuthSchemeException {
                 long expectedExpiration = System.currentTimeMillis() - (5 * 60 * 1000);
                 when(authSourceService.parse(any(X509AuthSource.class))).thenReturn(new Parsed("userId", new Date(), new Date(expectedExpiration), Origin.ZOWE));
 

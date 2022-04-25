@@ -63,7 +63,8 @@ public class HttpBasicPassTicketScheme implements IAuthenticationScheme {
     }
 
     @Override
-    public AuthenticationCommand createCommand(Authentication authentication, AuthSource authSource) {
+    public AuthenticationCommand createCommand(Authentication authentication, AuthSource authSource)
+        throws AuthSchemeException {
         final long before = System.currentTimeMillis();
 
         if (authSource == null || authSource.getRawSource() == null) {
@@ -107,7 +108,7 @@ public class HttpBasicPassTicketScheme implements IAuthenticationScheme {
     }
 
     @Override
-    public Optional<AuthSource> getAuthSource() {
+    public Optional<AuthSource> getAuthSource() throws AuthSchemeException {
         return authSourceService.getAuthSourceFromRequest();
     }
 

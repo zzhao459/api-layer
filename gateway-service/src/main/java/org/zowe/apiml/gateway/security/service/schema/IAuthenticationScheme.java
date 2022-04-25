@@ -12,6 +12,7 @@ package org.zowe.apiml.gateway.security.service.schema;
 import java.util.Optional;
 import org.zowe.apiml.auth.Authentication;
 import org.zowe.apiml.auth.AuthenticationScheme;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 
 
@@ -34,13 +35,14 @@ public interface IAuthenticationScheme {
      * @param authentication DTO describing details about authentication
      * @param authSource User's authentication source (Zowe's JWT token, client certificate, etc.)
      */
-    AuthenticationCommand createCommand(Authentication authentication, AuthSource authSource);
+    AuthenticationCommand createCommand(Authentication authentication, AuthSource authSource)
+        throws AuthSchemeException;
 
     /**
      * Returns authentication source according to the logic of the scheme. By default, authentication source is empty.
      * @return Optional of user's authentication source (Zowe's JWT token, client certificate, etc.) or empty Optional.
      */
-    default Optional<AuthSource> getAuthSource() {
+    default Optional<AuthSource> getAuthSource() throws AuthSchemeException {
         return Optional.empty();
     }
 

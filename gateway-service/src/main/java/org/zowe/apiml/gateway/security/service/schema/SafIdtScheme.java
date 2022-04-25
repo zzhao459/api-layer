@@ -28,6 +28,7 @@ import org.zowe.apiml.auth.AuthenticationScheme;
 import org.zowe.apiml.gateway.security.service.PassTicketException;
 import org.zowe.apiml.gateway.security.service.saf.SafIdtException;
 import org.zowe.apiml.gateway.security.service.saf.SafIdtProvider;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
 import org.zowe.apiml.passticket.IRRPassTicketGenerationException;
@@ -113,7 +114,7 @@ public class SafIdtScheme implements IAuthenticationScheme {
     }
 
     @Override
-    public Optional<AuthSource> getAuthSource() {
+    public Optional<AuthSource> getAuthSource() throws AuthSchemeException {
         return authSourceService.getAuthSourceFromRequest();
     }
 

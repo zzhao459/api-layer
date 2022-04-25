@@ -50,7 +50,7 @@ class X509CNAuthSourceServiceTest {
         }
 
         @Test
-        void whenClientCertInRequestInCustomAttribute_thenAuthSourceIsPresent() {
+        void whenClientCertInRequestInCustomAttribute_thenAuthSourceIsPresent() throws AuthSchemeException {
             when(context.getRequest()).thenReturn(request);
             when(request.getAttribute("client.auth.X509Certificate")).thenReturn(Arrays.array(x509Certificate));
             when(mapper.isClientAuthCertificate(any())).thenReturn(true);
@@ -78,7 +78,7 @@ class X509CNAuthSourceServiceTest {
         }
 
         @Test
-        void whenInternalApimlCertInRequestInStandardAttribute_thenAuthSourceIsPresent() {
+        void whenInternalApimlCertInRequestInStandardAttribute_thenAuthSourceIsPresent() throws AuthSchemeException {
             when(context.getRequest()).thenReturn(request);
             when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(Arrays.array(x509Certificate));
             when(mapper.isClientAuthCertificate(any())).thenReturn(true);

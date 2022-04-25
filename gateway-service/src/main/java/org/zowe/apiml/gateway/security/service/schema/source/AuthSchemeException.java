@@ -9,7 +9,7 @@
  */
 package org.zowe.apiml.gateway.security.service.schema.source;
 
-public class AuthSchemeException extends RuntimeException {
+public class AuthSchemeException extends Exception {
     final String[] params;
 
     public AuthSchemeException(String message) {

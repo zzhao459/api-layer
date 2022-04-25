@@ -21,6 +21,7 @@ import org.zowe.apiml.gateway.security.service.ServiceAuthenticationServiceImpl;
 import org.zowe.apiml.gateway.security.service.schema.AuthenticationCommand;
 import org.zowe.apiml.gateway.security.service.schema.ServiceAuthenticationService;
 import org.zowe.apiml.auth.Authentication;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSourceService;
 import org.zowe.apiml.security.common.token.TokenNotValidException;
@@ -66,7 +67,7 @@ public class ServiceAuthenticationDecorator {
                     throw new RequestAbortException(new TokenNotValidException("JWT Token is not authenticated"));
                 }
             }
-            catch (AuthenticationException ae) {
+            catch (AuthenticationException | AuthSchemeException ae) {
                 throw new RequestAbortException(ae);
             }
 
@@ -74,7 +75,8 @@ public class ServiceAuthenticationDecorator {
         }
     }
 
-    private boolean isSourceValidForCommand(AuthSource authSource, AuthenticationCommand cmd) {
+    private boolean isSourceValidForCommand(AuthSource authSource, AuthenticationCommand cmd)
+        throws AuthSchemeException {
         return !cmd.isRequiredValidSource() || (authSource != null && authSourceService.isValid(authSource));
     }
 }

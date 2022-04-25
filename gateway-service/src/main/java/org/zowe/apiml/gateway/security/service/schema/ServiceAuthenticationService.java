@@ -13,6 +13,7 @@ import com.netflix.appinfo.InstanceInfo;
 import java.util.Optional;
 import org.zowe.apiml.gateway.security.service.ServiceCacheEvict;
 import org.zowe.apiml.auth.Authentication;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 
 /**
@@ -28,7 +29,8 @@ public interface ServiceAuthenticationService extends ServiceCacheEvict {
      * @param authSource authentication source of user (authentication can depends on user privilege)
      * @return authentication command to update request in ZUUL
      */
-    AuthenticationCommand getAuthenticationCommand(Authentication authentication, AuthSource authSource);
+    AuthenticationCommand getAuthenticationCommand(Authentication authentication, AuthSource authSource)
+        throws AuthSchemeException;
 
     /**
      * Get or create command to service's authentication using serviceId and jwtToken of current user
@@ -37,7 +39,8 @@ public interface ServiceAuthenticationService extends ServiceCacheEvict {
      * @param authSource authentication source of user (authentication can depends on user privilege)
      * @return authentication command to update request in ZUUL (or lazy command to be updated in load balancer)
      */
-    AuthenticationCommand getAuthenticationCommand(String serviceId, Authentication authentication, AuthSource authSource);
+    AuthenticationCommand getAuthenticationCommand(String serviceId, Authentication authentication, AuthSource authSource)
+        throws AuthSchemeException;
 
     /**
      * Provides information about authentication scheme selected by a service registered in Eureka
@@ -53,5 +56,6 @@ public interface ServiceAuthenticationService extends ServiceCacheEvict {
      */
     Authentication getAuthentication(String serviceId);
 
-    Optional<AuthSource> getAuthSourceByAuthentication(Authentication authentication);
+    Optional<AuthSource> getAuthSourceByAuthentication(Authentication authentication)
+        throws AuthSchemeException;
 }

@@ -20,14 +20,14 @@ public interface AuthSourceService {
      * in case if more than one source is present.
      * @return AuthSource object which hold original source of authentication (JWT token, client certificate etc.)
      */
-    Optional<AuthSource> getAuthSourceFromRequest();
+    Optional<AuthSource> getAuthSourceFromRequest() throws AuthSchemeException;
 
     /**
      * Implements validation logic for specific source of authentication.
      * @param authSource AuthSource object which hold original source of authentication (JWT token, client certificate etc.)
      * @return true if authentication source is valid
      */
-    boolean isValid(AuthSource authSource);
+    boolean isValid(AuthSource authSource) throws AuthSchemeException;
 
     /**
      * Parses the source of authentication and provides basic details like userId or expiration date.
@@ -41,7 +41,7 @@ public interface AuthSourceService {
      * @param authSource AuthSource object which hold original source of authentication (JWT token, client certificate etc.)
      * @return LTPA token
      */
-    String getLtpaToken(AuthSource authSource);
+    String getLtpaToken(AuthSource authSource) throws AuthSchemeException;
 
-    String getJWT(AuthSource authSource);
+    String getJWT(AuthSource authSource) throws AuthSchemeException;
 }

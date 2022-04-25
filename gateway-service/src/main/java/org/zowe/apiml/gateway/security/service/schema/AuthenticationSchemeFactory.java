@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zowe.apiml.auth.Authentication;
 import org.zowe.apiml.auth.AuthenticationScheme;
+import org.zowe.apiml.gateway.security.service.schema.source.AuthSchemeException;
 import org.zowe.apiml.gateway.security.service.schema.source.AuthSource;
 
 import java.util.EnumMap;
@@ -71,7 +72,7 @@ public class AuthenticationSchemeFactory {
         return output;
     }
 
-    public AuthenticationCommand getAuthenticationCommand(Authentication authentication) {
+    public AuthenticationCommand getAuthenticationCommand(Authentication authentication) throws AuthSchemeException {
         final IAuthenticationScheme scheme;
         if ((authentication == null) || (authentication.getScheme() == null)) {
             scheme = defaultScheme;
